@@ -77,13 +77,17 @@ img {
 .section {
   padding: 5rem 0;
 
+  @include mobile {
+    padding: 3rem 0;
+  }
+
   &__title {
     font-size: 2.25rem;
     margin-bottom: 2rem;
     color: $color-primary;
-    
+
     @include mobile {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -91,6 +95,10 @@ img {
     font-size: 1.1rem;
     color: $color-text-muted;
     margin-bottom: 2.5rem;
+
+    @include mobile {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -646,10 +654,15 @@ img {
 .hero {
   position: relative;
   overflow: hidden;
-  padding-top: 140px; 
+  padding-top: 140px;
   padding-bottom: 8rem;
   background: radial-gradient(circle at top right, rgba($color-primary-light, 0.1), transparent 40%),
               radial-gradient(circle at bottom left, rgba($color-secondary, 0.05), transparent 40%);
+
+  @include mobile {
+    padding-top: 100px;
+    padding-bottom: 4rem;
+  }
 
   &__bg-ambient {
     position: absolute;
@@ -661,28 +674,36 @@ img {
     filter: blur(80px);
     z-index: 0;
     animation: float 10s ease-in-out infinite;
+
+    @include mobile {
+      width: 300px;
+      height: 300px;
+      right: -20%;
+      top: -10%;
+    }
   }
-  
+
   &__container {
     position: relative;
     z-index: 1;
     display: flex;
     align-items: center;
     gap: 4rem;
-    
+
     @include mobile {
       flex-direction: column;
       text-align: center;
+      gap: 2rem;
     }
   }
 
   &__title {
-    font-size: 3.5rem; 
+    font-size: 3.5rem;
     letter-spacing: -0.02em;
     margin-bottom: 1.5rem;
-    
+
     @include mobile {
-      font-size: 2.5rem;
+      font-size: 1.75rem;
     }
   }
 
@@ -692,8 +713,9 @@ img {
     margin-bottom: 2.5rem;
     max-width: 600px;
     line-height: 1.6;
-    
+
     @include mobile {
+      font-size: 1rem;
       margin-left: auto;
       margin-right: auto;
     }
@@ -708,6 +730,13 @@ img {
 
   @include mobile {
     justify-content: center;
+
+    .btn {
+      width: 100%;
+      text-align: center;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+    }
   }
 }
 
@@ -717,6 +746,8 @@ img {
 
 .hero__visual {
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .hero__visual-card {
@@ -727,12 +758,21 @@ img {
   box-shadow: $shadow-xl;
   position: relative;
   overflow: hidden;
+
+  @include mobile {
+    padding: 1.25rem;
+  }
 }
 
 .hero__visual-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .hero__visual-card .visual-label {
@@ -830,6 +870,11 @@ img {
   opacity: 0.3;
   top: 20%;
   left: 20%;
+
+  @include mobile {
+    width: 80px;
+    height: 80px;
+  }
 }
 
 .shape--2 {
@@ -839,6 +884,11 @@ img {
   width: 200px;
   height: 200px;
   animation: float 8s ease-in-out infinite reverse;
+
+  @include mobile {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .services__intro {
