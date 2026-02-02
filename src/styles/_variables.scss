@@ -1,0 +1,35 @@
+// Palette - Premium "Humanist" Theme
+// Base
+$color-bg: #F4F6F8; // Calm light base
+$color-bg-dark: #0B1220; // Deep Navy for contrast sections
+$color-text: #14212A; // Deep slate
+$color-text-muted: #5B6B7A; // Muted slate
+$color-text-light: #F8FAFC; // For dark backgrounds
+
+// Accents
+$color-primary: #0B4C4E; // Deep Teal (Trust, Calm)
+$color-primary-light: #12A2A5; // Brighter Teal (Highlights)
+$color-secondary: #E6C36A; // Soft Gold (Warmth, Humanist)
+$color-accent-soft: #D8F3F1; // Very light teal for backgrounds
+
+$color-white: #FFFFFF;
+$color-surface: #FFFFFF;
+$color-surface-glass: rgba(255, 255, 255, 0.7);
+
+// Typography
+$font-heading: 'Sora', sans-serif;
+$font-body: 'Manrope', sans-serif;
+
+// Spacing & Radius
+$radius-sm: 8px;
+$radius-md: 16px;
+$radius-lg: 24px;
+$radius-full: 999px;
+
+$shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+$shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+$shadow-glow: 0 0 20px rgba(15, 90, 94, 0.15);
+
+$container-width: 1200px;
