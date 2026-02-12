@@ -4,7 +4,7 @@ const Solution: React.FC = () => {
     return (
         <section id="concept" className="section concept">
             <div className="container">
-                <h2 className="section__title text-center">Клініка психічного здоров'я нового покоління</h2>
+                <h2 className="section__title text-center">Сучасний підхід до ментального здоров'я</h2>
                 <p className="section__subtitle text-center">Ми об'єднали науку, технології та емпатію в одному місці</p>
                 
                 <div className="features-grid">
@@ -29,7 +29,7 @@ const Solution: React.FC = () => {
                         <p>Тестування на схильність до психічних захворювань для точної профілактики.</p>
                     </div>
                     <div className="feature">
-                        <h3>06. Humanist продукти</h3>
+                        <h3>06. Продукти підтримки</h3>
                         <p>Додаткові інструменти підтримки та self-care для щоденної стабільності.</p>
                     </div>
                 </div>

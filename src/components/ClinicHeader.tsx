@@ -6,7 +6,7 @@ const ClinicHeader: React.FC = () => {
   return (
     <header className="header">
       <div className="container header__container header__container--spread">
-        <a href="#" className="logo">Humanist Clinic</a>
+        <a href="#" className="logo">OPORA</a>
 
         <button
           className="mobile-menu-toggle"

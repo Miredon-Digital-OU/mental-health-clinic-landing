@@ -36,7 +36,7 @@ const Benefits: React.FC = () => {
             Чому це працює
           </motion.h2>
           <motion.p variants={fadeInUp} className="section__subtitle">
-            Преміальний досвід, що поєднує турботу, технології та клінічні стандарти.
+            Якісна допомога, що поєднує турботу, технології та клінічні стандарти.
           </motion.p>
         </motion.div>
 

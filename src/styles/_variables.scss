@@ -1,35 +1,37 @@
-// Palette - Premium "Humanist" Theme
+// Palette - OPORA
+// Light, minimalist, blue-green. Calm, trust, support.
 // Base
-$color-bg: #F4F6F8; // Calm light base
-$color-bg-dark: #0B1220; // Deep Navy for contrast sections
-$color-text: #14212A; // Deep slate
-$color-text-muted: #5B6B7A; // Muted slate
-$color-text-light: #F8FAFC; // For dark backgrounds
+$color-bg: #F7FAFA; // Very light blue-green tint
+$color-bg-dark: #1A2F38; // Deep calming dark for contrast sections
+$color-text: #1E2D35; // Soft dark slate (not harsh black)
+$color-text-muted: #6B8A96; // Muted blue-grey
+$color-text-light: #F0F7F8; // For dark backgrounds
 
 // Accents
-$color-primary: #0B4C4E; // Deep Teal (Trust, Calm)
-$color-primary-light: #12A2A5; // Brighter Teal (Highlights)
-$color-secondary: #E6C36A; // Soft Gold (Warmth, Humanist)
-$color-accent-soft: #D8F3F1; // Very light teal for backgrounds
+$color-primary: #2A9D8F; // Calm teal-green (trust, nature)
+$color-primary-light: #52C7B8; // Lighter teal (highlights, hover)
+$color-secondary: #F4A261; // Warm amber accent (buttons, progress bar)
+$color-accent-soft: #E0F5F2; // Very soft teal for section backgrounds
 
 $color-white: #FFFFFF;
 $color-surface: #FFFFFF;
-$color-surface-glass: rgba(255, 255, 255, 0.7);
+$color-surface-glass: rgba(255, 255, 255, 0.75);
 
 // Typography
 $font-heading: 'Sora', sans-serif;
 $font-body: 'Manrope', sans-serif;
 
-// Spacing & Radius
-$radius-sm: 8px;
-$radius-md: 16px;
-$radius-lg: 24px;
+// Spacing & Radius — rounder, softer
+$radius-sm: 12px;
+$radius-md: 20px;
+$radius-lg: 28px;
 $radius-full: 999px;
 
-$shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-$shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-$shadow-glow: 0 0 20px rgba(15, 90, 94, 0.15);
+// Shadows — softer, subtler
+$shadow-sm: 0 1px 4px rgba(0,0,0,0.04);
+$shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+$shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+$shadow-xl: 0 16px 40px rgba(0,0,0,0.08);
+$shadow-glow: 0 0 24px rgba(42, 157, 143, 0.12);
 
 $container-width: 1200px;

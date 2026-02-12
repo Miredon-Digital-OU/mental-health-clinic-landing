@@ -16,14 +16,13 @@ const ClinicHero: React.FC = () => {
           variants={staggerContainer}
         >
           <motion.div variants={fadeInUp} className="hero__badges">
-            <span className="badge badge--soft">Evidence-based</span>
+            <span className="badge badge--soft">Доказова медицина</span>
             <span className="badge badge--soft">Комплексний підхід</span>
           </motion.div>
 
           <motion.h1 variants={fadeInUp} className="hero__title">
-            Клініка психічного здоров'я:
-            <br />
-            <span className="text-highlight">від психолога до психіатра та інноваційних методів</span>
+            Доказова допомога{' '}
+            <span className="text-highlight">для вашого ментального здоров'я</span>
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="hero__subtitle">
