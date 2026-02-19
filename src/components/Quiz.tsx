@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getVariant } from '../utils/abTesting';
+import { trackEvent, EVENTS } from '../utils/analytics';
 
 export type QuizAnswers = {
   pain: string;
@@ -12,62 +14,6 @@ export type QuizAnswers = {
 type QuizProps = {
   onComplete: (answers: QuizAnswers) => void;
 };
-
-const questions = [
-  {
-    id: 'pain' as const,
-    title: 'Що вас турбує найбільше зараз?',
-    options: [
-      'Тривога / постійне напруження',
-      'Депресивний стан / апатія',
-      'Вигорання',
-      'Наслідки війни / ПТСР',
-      'Проблеми у стосунках',
-      'Хочу краще зрозуміти себе',
-    ],
-  },
-  {
-    id: 'experience' as const,
-    title: 'Ви вже звертались до психолога?',
-    options: [
-      'Так, проходжу терапію',
-      'Так, але не допомогло',
-      'Ні, тільки планую',
-      'Ніколи не звертався',
-    ],
-  },
-  {
-    id: 'psychiatrist' as const,
-    title: 'Як ви ставитесь до консультації психіатра?',
-    options: [
-      'Готовий, якщо потрібно',
-      'Сумніваюсь / трохи боюсь',
-      'Мені це не потрібно',
-      'Не знаю різниці між психологом і психіатром',
-    ],
-  },
-  {
-    id: 'methods' as const,
-    title: 'Чи цікаві вам сучасні методи роботи з мозком?',
-    options: [
-      'Хочу тільки розмовну терапію',
-      'Цікавий нейрофідбек',
-      'Цікава VR-терапія',
-      'Хотів би знати про генетичні ризики',
-      'Хочу комплексний підхід',
-    ],
-  },
-  {
-    id: 'pricing' as const,
-    title: 'Який формат вам ближчий?',
-    options: [
-      '50\u201370\u20AC / сесія (тільки психолог)',
-      '120\u2013180\u20AC / місяць (психолог + психіатр)',
-      '250\u2013400\u20AC / місяць (комплекс)',
-      'Хочу дізнатись деталі',
-    ],
-  },
-];
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -88,11 +34,76 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>({});
   const [direction, setDirection] = useState(1);
+  const [pricingVariant] = useState<'A' | 'B'>(() => getVariant('pricing_model'));
+
+  const questions = useMemo(() => [
+    {
+      id: 'pain' as const,
+      title: 'Що вас турбує найбільше зараз?',
+      options: [
+        'Тривога / постійне напруження',
+        'Депресивний стан / апатія',
+        'Вигорання',
+        'Наслідки війни / ПТСР',
+        'Проблеми у стосунках',
+        'Хочу краще зрозуміти себе',
+      ],
+    },
+    {
+      id: 'experience' as const,
+      title: 'Ви вже звертались до психолога?',
+      options: [
+        'Так, зараз проходжу терапію',
+        'Так, але не допомогло',
+        'Ні, тільки планую',
+        'Ніколи не звертався',
+      ],
+    },
+    {
+      id: 'psychiatrist' as const,
+      title: 'Як ви ставитесь до консультації психіатра?',
+      options: [
+        'Готовий, якщо потрібно',
+        'Сумніваюсь / трохи боюсь',
+        'Мені це не потрібно',
+        'Не знаю різниці між психологом і психіатром',
+      ],
+    },
+    {
+      id: 'methods' as const,
+      title: 'Чи цікаві вам сучасні методи роботи з мозком?',
+      options: [
+        'Хочу тільки розмовну терапію',
+        'Цікавий нейрофідбек',
+        'Цікава VR-терапія',
+        'Хотів би знати про генетичні ризики',
+        'Хочу комплексний підхід',
+      ],
+    },
+    {
+      id: 'pricing' as const,
+      title: 'Який формат вам ближчий?',
+      options: pricingVariant === 'A' 
+        ? [ // Subscription Model
+            '1200–1800 грн сесія (тільки психолог)',
+            '6000-8000 грн / місяць (психолог + психіатр)',
+            '10000-12000 грн / місяць (комплекс із додатковими методами)',
+            'Хочу дізнатись більше про ціни',
+          ]
+        : [ // Packages Model
+            'Окремі сесії (1200-1800 грн)',
+            'Пакет 4 сесії (6000 грн)',
+            'Пакет 8 сесій + психіатр (12000 грн)',
+            'Комплексний пакет (15000 грн)',
+          ],
+    },
+  ], [pricingVariant]);
 
   const totalSteps = questions.length;
   const question = questions[currentStep];
 
   const handleSelect = (option: string) => {
+    trackEvent(EVENTS.QUESTION_ANSWERED, { question: question.id, answer: option });
     const newAnswers = { ...answers, [question.id]: option };
     setAnswers(newAnswers);
 

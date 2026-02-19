@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Quiz from './components/Quiz';
@@ -7,7 +7,9 @@ import LeadForm from './components/LeadForm';
 import ReadinessFilter from './components/ReadinessFilter';
 import Footer from './components/Footer';
 import ClinicPage from './components/ClinicPage';
+import FloatingButton from './components/FloatingButton';
 import type { QuizAnswers } from './components/Quiz';
+import { trackEvent, EVENTS } from './utils/analytics';
 
 type AppStage = 'hero' | 'quiz' | 'result' | 'lead' | 'readiness' | 'clinic';
 
@@ -15,6 +17,10 @@ function App() {
   const [stage, setStage] = useState<AppStage>('hero');
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers | null>(null);
   const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    trackEvent(EVENTS.PAGE_LOADED);
+  }, []);
 
   const scrollToTop = () => {
     setTimeout(() => {
@@ -29,6 +35,7 @@ function App() {
   };
 
   const handleStartQuiz = () => {
+    trackEvent(EVENTS.TEST_STARTED);
     setStage('quiz');
     scrollToMain();
   };
@@ -75,6 +82,7 @@ function App() {
         </div>
       </main>
       <Footer />
+      {stage === 'hero' && <FloatingButton onClick={handleStartQuiz} />}
     </div>
   );
 }

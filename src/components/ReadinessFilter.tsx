@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
+import { trackEvent, EVENTS } from '../utils/analytics';
 
 type ReadinessFilterProps = {
   onComplete: () => void;
@@ -13,11 +14,12 @@ const ReadinessFilter: React.FC<ReadinessFilterProps> = ({ onComplete }) => {
   const options = [
     'Протягом 2 тижнів',
     'Протягом місяця',
-    'Просто досліджую',
+    'Просто досліджую варіанти',
   ];
 
   const handleSelect = (option: string) => {
     setSelected(option);
+    trackEvent(EVENTS.TEMPERATURE_SELECTED, { option });
     console.log('Readiness:', option);
     setTimeout(() => setDone(true), 400);
   };

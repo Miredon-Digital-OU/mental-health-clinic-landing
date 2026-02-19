@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import type { QuizAnswers } from './Quiz';
+import { trackEvent, EVENTS } from '../utils/analytics';
 
 type ResultProfile = {
   title: string;
@@ -9,63 +10,71 @@ type ResultProfile = {
 };
 
 function getResult(answers: QuizAnswers): ResultProfile {
-  const readyForPsychiatrist =
-    answers.psychiatrist === 'Готовий, якщо потрібно';
-  const interestedInMethods =
-    answers.methods !== 'Хочу тільки розмовну терапію';
-  const burnout = answers.pain === 'Вигорання';
-  const brainInterest =
-    answers.methods === 'Цікавий нейрофідбек' ||
-    answers.methods === 'Хочу комплексний підхід';
+  const pain = answers.pain;
+  const psychiatrist = answers.psychiatrist;
+  const methods = answers.methods;
 
-  // Branch 1: Complex program
-  if (readyForPsychiatrist && interestedInMethods) {
+  const isReadyForPsychiatrist = psychiatrist === 'Готовий, якщо потрібно';
+  const isTalkOnly = methods === 'Хочу тільки розмовну терапію';
+  
+  // Logic 4: PTSD + Ready + VR
+  if (pain === 'Наслідки війни / ПТСР' && isReadyForPsychiatrist && methods === 'Цікава VR-терапія') {
     return {
+      title: 'Інтенсивна програма з VR-терапією',
+      points: [
+        'Робота з травмою (VR-експозиція)',
+        'Психіатр + кризовий психолог',
+      ],
+      description: 'Сучасний метод VR-терапії дозволяє безпечно та контрольовано опрацювати травматичний досвід.',
+    };
+  }
+
+  // Logic 3: Burnout + Brain interest
+  if (pain === 'Вигорання' && (methods === 'Цікавий нейрофідбек' || methods === 'Хочу комплексний підхід')) {
+    return {
+      title: 'Програма відновлення ресурсу',
+      points: [
+        'Психотерапія + нейрофідбек',
+        'Відновлення сну та регуляція стресу',
+      ],
+      description: 'Поєднання терапії та технологій допомагає швидше відновити енергію та когнітивну ефективність.',
+    };
+  }
+
+  // Logic 2: Talk only + Not ready
+  if (isTalkOnly && !isReadyForPsychiatrist) {
+    return {
+      title: 'Психологічний старт',
+      points: [
+        'Індивідуальна терапія з психологом',
+        'Без медикаментів (на цьому етапі)',
+      ],
+      description: 'Почніть з розмовної терапії у безпечному просторі, щоб краще зрозуміти себе та свої потреби.',
+    };
+  }
+
+  // Logic 1: Anxiety + Ready + Interest (also serves as a strong default/fallback for complex needs)
+  // Or explicitly checking:
+  if (pain === 'Тривога / постійне напруження' && isReadyForPsychiatrist && !isTalkOnly) {
+     // falls through to default commonly, but we can return here
+      return {
       title: 'Комплексна програма',
       points: [
         'Психолог + оцінка психіатра',
         'Додаткові методи для пришвидшення результату',
       ],
-      description:
-        'Комплексний підхід дозволяє зменшити симптоми швидше та системніше.',
+      description: 'Комплексний підхід дозволяє зменшити симптоми на 40% швидше та працювати системно з причинами, а не лише симптомами.',
     };
   }
 
-  // Branch 2: Burnout + brain interest -> Resource recovery
-  if (burnout && brainInterest) {
-    return {
-      title: 'Програма відновлення ресурсу',
-      points: [
-        'Психотерапія + нейрофідбек',
-        'Оцінка стану та моніторинг прогресу',
-      ],
-      description:
-        'Поєднання терапії та технологій допомагає швидше відновити енергію та ефективність.',
-    };
-  }
-
-  // Branch 3: Only talk therapy, not ready for psychiatrist -> Basic start
-  if (!interestedInMethods && !readyForPsychiatrist) {
-    return {
-      title: 'Психологічний старт',
-      points: [
-        'Індивідуальна терапія з психологом',
-        'Оцінка стану та план підтримки',
-      ],
-      description:
-        'Почніть з розмовної терапії та визначте, що саме вам потрібно.',
-    };
-  }
-
-  // Default: Comprehensive assessment
+  // Default Fallback
   return {
-    title: 'Психолог + оцінка психіатра',
+    title: 'Комплексна програма',
     points: [
       'Психолог + оцінка психіатра',
-      'Додаткові методи за потреби',
+      'Додаткові методи для пришвидшення результату',
     ],
-    description:
-      'На основі вашого запиту рекомендуємо почати з оцінки та підібрати оптимальний формат підтримки.',
+    description: 'Комплексний підхід дозволяє зменшити симптоми на 40% швидше та працювати системно з причинами, а не лише симптомами.',
   };
 }
 
@@ -75,7 +84,11 @@ type QuizResultProps = {
 };
 
 const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
-  const result = getResult(answers);
+  const result = useMemo(() => getResult(answers), [answers]);
+
+  React.useEffect(() => {
+    trackEvent(EVENTS.RESULT_SHOWN, { result: result.title });
+  }, [result.title]);
 
   return (
     <section className="section quiz-result">
@@ -101,7 +114,7 @@ const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
             className="btn btn--primary quiz-result__cta"
             onClick={onContinue}
           >
-            Отримати запрошення
+            Отримати персональний план
           </button>
         </motion.div>
       </div>

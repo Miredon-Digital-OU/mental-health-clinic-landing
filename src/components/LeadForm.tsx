@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
+import { trackEvent, EVENTS } from '../utils/analytics';
 
 type LeadFormProps = {
   onSubmitted: () => void;
@@ -10,6 +11,7 @@ type LeadFormProps = {
 const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
+  const [age, setAge] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting'>('idle');
 
   const isValid = name.trim().length > 1 && contact.trim().length > 3;
@@ -19,7 +21,8 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
     if (!isValid) return;
 
     setStatus('submitting');
-    console.log('Lead captured:', { name, contact });
+    trackEvent(EVENTS.LEAD_SUBMITTED);
+    console.log('Lead captured:', { name, contact, age });
     setTimeout(() => {
       onSubmitted();
     }, 800);
@@ -40,18 +43,15 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
               Залиште контакт та отримайте:
             </p>
             <ul className="lead-capture__benefits">
-              <li>персональний план</li>
-              <li>знижку на першу консультацію</li>
-              <li>ранній доступ</li>
+              <li>Персональний план лікування</li>
+              <li>Знижку 20% на першу консультацію</li>
+              <li>Ранній доступ до запису</li>
             </ul>
-            <p className="lead-capture__urgency">
-              Перші 50 учасників отримають безкоштовну первинну оцінку
-            </p>
           </div>
 
           <form className="lead-capture__form" onSubmit={handleSubmit}>
             <div className="form__group">
-              <label htmlFor="name">Ім'я</label>
+              <label htmlFor="name">Ім'я (обов'язково)</label>
               <input
                 type="text"
                 id="name"
@@ -62,7 +62,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
               />
             </div>
             <div className="form__group">
-              <label htmlFor="contact">Телефон або Email</label>
+              <label htmlFor="contact">Телефон або Email (обов'язково)</label>
               <input
                 type="text"
                 id="contact"
@@ -71,6 +71,22 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
                 value={contact}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setContact(e.target.value)}
               />
+            </div>
+            <div className="form__group">
+              <label htmlFor="age">Вік (опціонально)</label>
+              <select
+                id="age"
+                value={age}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setAge(e.target.value)}
+                className="select-input"
+              >
+                <option value="">Оберіть вік</option>
+                <option value="18-25">18-25</option>
+                <option value="26-35">26-35</option>
+                <option value="36-45">36-45</option>
+                <option value="46-60">46-60</option>
+                <option value="60+">60+</option>
+              </select>
             </div>
             <button
               type="submit"
