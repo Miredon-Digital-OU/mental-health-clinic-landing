@@ -3,6 +3,7 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { trackEvent, EVENTS } from '../utils/analytics';
+import { getVariant } from '../utils/abTesting';
 
 type LeadFormProps = {
   onSubmitted: () => void;
@@ -11,10 +12,18 @@ type LeadFormProps = {
 const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
-  const [age, setAge] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting'>('idle');
+  const [variant] = useState<'A' | 'B'>(() => getVariant('form_trigger'));
+  const [hasStarted, setHasStarted] = useState(false);
 
   const isValid = name.trim().length > 1 && contact.trim().length > 3;
+
+  const handleFocus = () => {
+    if (!hasStarted) {
+      setHasStarted(true);
+      trackEvent(EVENTS.FORM_STARTED);
+    }
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -22,7 +31,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
 
     setStatus('submitting');
     trackEvent(EVENTS.LEAD_SUBMITTED);
-    console.log('Lead captured:', { name, contact, age });
+    console.log('Lead captured:', { name, contact, form_trigger_variant: variant });
     setTimeout(() => {
       onSubmitted();
     }, 800);
@@ -44,7 +53,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
             </p>
             <ul className="lead-capture__benefits">
               <li>Персональний план лікування</li>
-              <li>Знижку 20% на першу консультацію</li>
+              <li>{variant === 'A' ? 'Знижка 20% для перших 50 учасників' : 'Безкоштовна первинна оцінка'}</li>
               <li>Ранній доступ до запису</li>
             </ul>
           </div>
@@ -59,6 +68,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
                 placeholder="Ваше ім'я"
                 value={name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                onFocus={handleFocus}
               />
             </div>
             <div className="form__group">
@@ -70,23 +80,8 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
                 placeholder="+380... або email@example.com"
                 value={contact}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setContact(e.target.value)}
+                onFocus={handleFocus}
               />
-            </div>
-            <div className="form__group">
-              <label htmlFor="age">Вік (опціонально)</label>
-              <select
-                id="age"
-                value={age}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => setAge(e.target.value)}
-                className="select-input"
-              >
-                <option value="">Оберіть вік</option>
-                <option value="18-25">18-25</option>
-                <option value="26-35">26-35</option>
-                <option value="36-45">36-45</option>
-                <option value="46-60">46-60</option>
-                <option value="60+">60+</option>
-              </select>
             </div>
             <button
               type="submit"

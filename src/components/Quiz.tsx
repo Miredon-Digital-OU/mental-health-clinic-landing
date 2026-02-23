@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getVariant } from '../utils/abTesting';
-import { trackEvent, EVENTS } from '../utils/analytics';
+import { trackEvent, getQuestionEvent } from '../utils/analytics';
 
 export type QuizAnswers = {
   pain: string;
@@ -51,7 +51,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     },
     {
       id: 'experience' as const,
-      title: 'Ви вже звертались до психолога?',
+      title: 'Ви вже зверталися до психолога?',
       options: [
         'Так, зараз проходжу терапію',
         'Так, але не допомогло',
@@ -86,15 +86,15 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       options: pricingVariant === 'A' 
         ? [ // Subscription Model
             '1200–1800 грн сесія (тільки психолог)',
-            '6000-8000 грн / місяць (психолог + психіатр)',
-            '10000-12000 грн / місяць (комплекс із додатковими методами)',
+            '6000-8000 / місяць (психолог + психіатр)',
+            '10000-12000 / місяць (комплекс із додатковими методами)',
             'Хочу дізнатись більше про ціни',
           ]
         : [ // Packages Model
-            'Окремі сесії (1200-1800 грн)',
-            'Пакет 4 сесії (6000 грн)',
-            'Пакет 8 сесій + психіатр (12000 грн)',
-            'Комплексний пакет (15000 грн)',
+            'Окремі сесії (1200-1800)',
+            'Пакет 4 сесії (6000)',
+            'Пакет 8 сесій + психіатр (12000)',
+            'Комплексний пакет (15000)',
           ],
     },
   ], [pricingVariant]);
@@ -103,7 +103,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const question = questions[currentStep];
 
   const handleSelect = (option: string) => {
-    trackEvent(EVENTS.QUESTION_ANSWERED, { question: question.id, answer: option });
+    trackEvent(getQuestionEvent(currentStep), { question: question.id, answer: option });
     const newAnswers = { ...answers, [question.id]: option };
     setAnswers(newAnswers);
 
@@ -134,7 +134,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
               />
             ))}
           </div>
-          <p className="quiz__counter">{currentStep + 1} / {totalSteps}</p>
+          <p className="quiz__counter">Питання {currentStep + 1} з {totalSteps}</p>
 
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div

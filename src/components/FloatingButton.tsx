@@ -52,7 +52,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ onClick }) => {
             <div className="tooltip-content">
               Пройдіть тест за 60 секунд
               <br />
-              та дізнайтеся, що вам підходить
+              та дізнайтеся, що вам підходить 👉
             </div>
             <div className="tooltip-arrow" />
           </motion.div>
