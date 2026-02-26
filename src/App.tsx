@@ -66,7 +66,7 @@ function App() {
     return <ClinicPage />;
   }
 
-  const showHeaderLinks = stage === 'hero';
+  const showHeaderLinks = false;
 
   return (
     <div className="app">
