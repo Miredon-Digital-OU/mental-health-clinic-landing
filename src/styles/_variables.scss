@@ -1,17 +1,16 @@
-// Palette - OPORA
-// Light, minimalist, blue-green. Calm, trust, support.
+// Palette - monochrome, soft, premium
 // Base
-$color-bg: #F7FAFA; // Very light blue-green tint
-$color-bg-dark: #1A2F38; // Deep calming dark for contrast sections
-$color-text: #1E2D35; // Soft dark slate (not harsh black)
-$color-text-muted: #6B8A96; // Muted blue-grey
-$color-text-light: #F0F7F8; // For dark backgrounds
+$color-bg: #ecefef;
+$color-bg-dark: #111319;
+$color-text: #101218;
+$color-text-muted: #73798a;
+$color-text-light: #f4f6f8;
 
 // Accents
-$color-primary: #2A9D8F; // Calm teal-green (trust, nature)
-$color-primary-light: #52C7B8; // Lighter teal (highlights, hover)
-$color-secondary: #F4A261; // Warm amber accent (buttons, progress bar)
-$color-accent-soft: #E0F5F2; // Very soft teal for section backgrounds
+$color-primary: #101218;
+$color-primary-light: #2d3340;
+$color-secondary: #d8dde6;
+$color-accent-soft: #dde3e2;
 
 $color-white: #FFFFFF;
 $color-surface: #FFFFFF;
@@ -21,17 +20,17 @@ $color-surface-glass: rgba(255, 255, 255, 0.75);
 $font-heading: 'Sora', sans-serif;
 $font-body: 'Manrope', sans-serif;
 
-// Spacing & Radius — rounder, softer
+// Spacing & Radius
 $radius-sm: 12px;
 $radius-md: 20px;
 $radius-lg: 28px;
 $radius-full: 999px;
 
-// Shadows — softer, subtler
-$shadow-sm: 0 1px 4px rgba(0,0,0,0.04);
-$shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-$shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
-$shadow-xl: 0 16px 40px rgba(0,0,0,0.08);
-$shadow-glow: 0 0 24px rgba(42, 157, 143, 0.12);
+// Shadows
+$shadow-sm: 0 1px 4px rgba(10, 14, 20, 0.06);
+$shadow-md: 0 6px 20px rgba(10, 14, 20, 0.08);
+$shadow-lg: 0 14px 30px rgba(10, 14, 20, 0.1);
+$shadow-xl: 0 24px 50px rgba(10, 14, 20, 0.12);
+$shadow-glow: 0 0 24px rgba(16, 18, 24, 0.12);
 
 $container-width: 1200px;

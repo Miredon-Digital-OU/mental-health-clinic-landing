@@ -5,6 +5,22 @@ import { Send } from 'lucide-react';
 import { trackEvent, EVENTS } from '../utils/analytics';
 import { getVariant } from '../utils/abTesting';
 
+const isValidUAPhone = (value: string): boolean => {
+  const cleaned = value.replace(/[\s\-()]/g, '');
+  const uaPhoneRegex = /^(\+380|380|0)\d{9}$/;
+  return uaPhoneRegex.test(cleaned);
+};
+
+const isValidEmail = (value: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+};
+
+const isValidContact = (value: string): boolean => {
+  const trimmed = value.trim();
+  return isValidUAPhone(trimmed) || isValidEmail(trimmed);
+};
+
 type LeadFormProps = {
   onSubmitted: () => void;
 };
@@ -15,8 +31,9 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
   const [status, setStatus] = useState<'idle' | 'submitting'>('idle');
   const [variant] = useState<'A' | 'B'>(() => getVariant('form_trigger'));
   const [hasStarted, setHasStarted] = useState(false);
+  const [error, setError] = useState('');
 
-  const isValid = name.trim().length > 1 && contact.trim().length > 3;
+  const isValid = name.trim().length > 1 && isValidContact(contact);
 
   const handleFocus = () => {
     if (!hasStarted) {
@@ -27,7 +44,11 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!isValid) return;
+    
+    if (!isValidContact(contact.trim())) {
+      setError('Введіть український номер телефону (+380...) або email');
+      return;
+    }
 
     setStatus('submitting');
     trackEvent(EVENTS.LEAD_SUBMITTED);
@@ -64,24 +85,32 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
               <input
                 type="text"
                 id="name"
+                name="name"
                 required
                 placeholder="Ваше ім'я"
                 value={name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                 onFocus={handleFocus}
+                autoComplete="name"
               />
             </div>
             <div className="form__group">
               <label htmlFor="contact">Телефон або Email (обов'язково)</label>
               <input
-                type="text"
+                type="tel"
                 id="contact"
+                name="contact"
                 required
-                placeholder="+380... або email@example.com"
+                placeholder="+380 50 123 4567"
                 value={contact}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setContact(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setContact(e.target.value);
+                  setError('');
+                }}
                 onFocus={handleFocus}
+                autoComplete="tel"
               />
+              {error && <span className="form__error">{error}</span>}
             </div>
             <button
               type="submit"
@@ -89,7 +118,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
               disabled={status === 'submitting' || !isValid}
             >
               {status === 'submitting' ? (
-                'Відправка...'
+                'Відправка…'
               ) : (
                 <span className="flex-center gap-2">
                   Отримати запрошення <Send size={16} />

@@ -66,9 +66,11 @@ function App() {
     return <ClinicPage />;
   }
 
+  const showHeaderLinks = stage === 'hero';
+
   return (
     <div className="app">
-      <Header />
+      <Header showLinks={showHeaderLinks} />
       <main>
         {stage === 'hero' && <Hero onStartQuiz={handleStartQuiz} />}
 

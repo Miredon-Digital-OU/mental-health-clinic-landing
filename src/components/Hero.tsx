@@ -8,52 +8,55 @@ type HeroProps = {
   onStartQuiz: () => void;
 };
 
+const heroStripImages = [
+  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80',
+  'https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&w=700&q=80',
+  'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=700&q=80',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=700&q=80',
+];
+
+const showcaseCards = [
+  {
+    title: 'Тривожність та перевантаження',
+    image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=700&q=80',
+  },
+  {
+    title: 'Емоційне відновлення',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80',
+  },
+  {
+    title: 'Повернення до ресурсу',
+    image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=700&q=80',
+  },
+];
+
 const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [variant] = useState<'A' | 'B'>(() => getVariant('hero_title'));
 
   return (
     <section className="hero hero--centered">
-      <div className="hero__bg-ambient" />
-
       <div className="container">
         <motion.div
-          className="hero__content hero__content--centered"
+          className="hero-shell"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
         >
-          <motion.div variants={fadeInUp} className="hero__features" style={{ marginBottom: '2rem', textAlign: 'left', display: 'inline-block', background: 'rgba(255,255,255,0.7)', padding: '1.5rem', borderRadius: '12px' }}>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', fontWeight: 600, color: '#2C3E50' }}>Ми поєднали досвід і сучасні технології</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}><span style={{ color: '#27AE60' }}>✔</span> Краща команда лікарів і психотерапевтів</li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}><span style={{ color: '#27AE60' }}>✔</span> Світові стандарти ментальної допомоги</li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}><span style={{ color: '#27AE60' }}>✔</span> Передові методи діагностики</li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}><span style={{ color: '#27AE60' }}>✔</span> Новітні підходи підтримки для м’якої регуляції роботи нервової системи</li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}><span style={{ color: '#27AE60' }}>✔</span> Оцінка індивідуальних особливостей, включно з генетичним тестуванням</li>
-            </ul>
-          </motion.div>
+          <motion.p variants={fadeInUp} className="hero__kicker">
+            Комплексна турбота про ментальне здоров&apos;я
+          </motion.p>
 
-          {variant === 'A' ? (
-            <>
-              <motion.h1 variants={fadeInUp} className="hero__title">
-                Вам точно достатньо{' '}
-                <span className="text-highlight">лише психолога?</span>
-              </motion.h1>
-              <motion.p variants={fadeInUp} className="hero__subtitle">
-                Пройдіть короткий тест та дізнайтеся, який формат допомоги вам підходить
-              </motion.p>
-            </>
-          ) : (
-            <>
-              <motion.h1 variants={fadeInUp} className="hero__title">
-                Дізнайтесь, який формат допомоги вам підходить{' '}
-                <span className="text-highlight">за 60 секунд</span>
-              </motion.h1>
-              <motion.p variants={fadeInUp} className="hero__subtitle">
-                Персональна рекомендація на основі вашої ситуації
-              </motion.p>
-            </>
-          )}
+          <motion.h1 variants={fadeInUp} className="hero__title">
+            {variant === 'A'
+              ? 'Разом перетворюємо складний шлях до відновлення у зрозумілий план'
+              : 'Підібраний формат підтримки для вашого стану без здогадок та хаосу'}
+          </motion.h1>
+
+          <motion.p variants={fadeInUp} className="hero__subtitle">
+            Пройдіть короткий тест і отримайте рекомендацію: психолог, психіатр або комплексний підхід
+            з додатковими методиками.
+          </motion.p>
 
           <motion.div variants={fadeInUp} className="hero__actions hero__actions--centered">
             <button
@@ -61,9 +64,56 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
               className="btn btn--primary btn--lg"
               onClick={onStartQuiz}
             >
-              🔘 Пройти тест (60 секунд) <ArrowRight size={18} style={{ marginLeft: 8 }} />
+              Пройти тест за 60 секунд <ArrowRight size={18} style={{ marginLeft: 8 }} />
             </button>
           </motion.div>
+
+          <motion.p variants={fadeInUp} className="hero__note">
+            Персональна рекомендація, яку можна обговорити з нашою командою одразу після тесту.
+          </motion.p>
+
+          <motion.div variants={fadeInUp} className="hero__gallery-strip">
+            {heroStripImages.map((image, index) => (
+              <img
+                key={image}
+                src={image}
+                alt={`Підтримка та відновлення ${index + 1}`}
+                loading="lazy"
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="hero-showcase"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7 }}
+        >
+          <div className="hero-showcase__copy">
+            <p className="hero-showcase__eyebrow">Для різних ситуацій</p>
+            <h2>Терапія, підтримка та відновлення у зручному для вас темпі</h2>
+            <p>
+              Поєднуємо перевірені протоколи, комфортний ритм роботи та сучасні інструменти,
+              щоб ви бачили прогрес не тільки в кабінеті, а й у повсякденному житті.
+            </p>
+            <button type="button" className="btn btn--primary btn--sm" onClick={onStartQuiz}>
+              Підібрати програму
+            </button>
+          </div>
+
+          <div className="hero-showcase__visual">
+            <span className="hero-showcase__badge">Онлайн та офлайн</span>
+            <div className="hero-showcase__cards">
+              {showcaseCards.map((card) => (
+                <article key={card.title} className="hero-showcase__card">
+                  <img src={card.image} alt={card.title} loading="lazy" />
+                  <p>{card.title}</p>
+                </article>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

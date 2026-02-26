@@ -66,6 +66,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ onClick }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleClick}
+        aria-label="Пройти тест"
       >
         <MessageCircle size={32} color="white" />
       </motion.button>

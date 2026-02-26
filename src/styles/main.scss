@@ -833,6 +833,13 @@ img {
   margin-top: 0.75rem;
 }
 
+.form__error {
+  display: block;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
@@ -1613,5 +1620,718 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Restyle / redesign overrides (client visual reference)
+// ---------------------------------------------------------------------------
+body {
+  font-size: 1rem;
+  line-height: 1.6;
+  background: radial-gradient(circle at 0% 0%, #e6eceb 0%, $color-bg 45%, #f4f5f7 100%);
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app > main {
+  padding-top: 6.5rem;
+
+  @include mobile {
+    padding-top: 5.75rem;
+  }
+}
+
+.btn {
+  border-radius: $radius-full;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: $color-text;
+}
+
+.btn--primary {
+  background-color: $color-primary;
+  border-color: $color-primary;
+  color: $color-white;
+
+  &:hover {
+    background-color: #000;
+    border-color: #000;
+    transform: translateY(-1px);
+  }
+}
+
+.btn--outline {
+  background: $color-white;
+  border-color: $color-primary;
+  color: $color-primary;
+
+  &:hover {
+    background: $color-primary;
+    color: $color-white;
+  }
+}
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #E08F4A;
+  color: #E08F4A;
+
+  &:hover {
+    background: #E08F4A;
+    color: $color-white;
+  }
+}
+
+.header__action,
+.nav__link.nav__link--cta {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: $color-white;
+
+  &:hover {
+    background: #000;
+    border-color: #000;
+    color: $color-white;
+  }
+}
+
+.btn:focus-visible,
+.header__action:focus-visible,
+.nav__link.nav__link--cta:focus-visible,
+.header__lang:focus-visible {
+  outline: 3px solid #7f8cff;
+  outline-offset: 2px;
+}
+
+.header {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 0.9rem 0;
+}
+
+.header__shell {
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  padding: 0.95rem 1.3rem;
+}
+
+.header__container {
+  min-height: 44px;
+}
+
+.logo {
+  color: $color-primary;
+  letter-spacing: -0.02em;
+  font-size: 1.35rem;
+}
+
+.nav--desktop {
+  @include mobile {
+    display: none;
+  }
+}
+
+.nav__list {
+  gap: 1.25rem;
+}
+
+.nav__link {
+  font-size: 0.92rem;
+  color: $color-text-muted;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.header__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.header__lang {
+  min-height: 38px;
+  border-radius: $radius-full;
+  border: 1px solid rgba(10, 14, 20, 0.14);
+  background: $color-white;
+  color: $color-text;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.header__action {
+  min-height: 38px;
+  border-radius: $radius-full;
+  border: 1px solid $color-primary;
+  background: $color-primary;
+  color: $color-white;
+  padding: 0.45rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero {
+  min-height: auto;
+  padding-top: 0;
+  padding-bottom: 2.25rem;
+  background: transparent;
+}
+
+.clinic-hero {
+  padding-top: 0.65rem;
+}
+
+.clinic-hero__container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  align-items: stretch;
+  gap: 1.7rem;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: 2rem;
+  box-shadow: $shadow-lg;
+  padding: 2.2rem;
+}
+
+.clinic-hero .hero__bg-ambient {
+  opacity: 0.45;
+}
+
+.clinic-hero__content {
+  align-self: center;
+}
+
+.clinic-hero .hero__badges {
+  justify-content: flex-start;
+
+  .badge {
+    background: rgba(16, 18, 24, 0.06);
+    color: $color-primary;
+    border: 1px solid rgba(16, 18, 24, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+}
+
+.clinic-hero__title {
+  max-width: none;
+  margin: 0 0 1rem;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.05rem, 4vw, 3.35rem);
+}
+
+.clinic-hero .hero__subtitle {
+  max-width: 620px;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 1.06rem;
+}
+
+.clinic-hero .hero__actions {
+  margin-bottom: 1.1rem;
+}
+
+.clinic-hero .hero__chips .tag {
+  background: #f5f7fa;
+  border: 1px solid rgba(10, 14, 20, 0.1);
+  color: $color-text;
+}
+
+.clinic-hero .chip {
+  background: $color-white;
+  border-color: rgba(10, 14, 20, 0.12);
+  color: $color-text;
+}
+
+.clinic-hero .chip:hover {
+  border-color: $color-primary;
+  background: $color-primary;
+  color: $color-white;
+}
+
+.clinic-hero .hero__visual {
+  width: 100%;
+}
+
+.clinic-hero .hero__visual-card {
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-height: 430px;
+  background: #f7f9fb;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  box-shadow: none;
+}
+
+.clinic-hero .hero__visual-grid {
+  grid-template-columns: 1fr;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.clinic-hero__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.clinic-hero__list-item {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(10, 14, 20, 0.08);
+}
+
+.clinic-hero__list-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.clinic-hero .clinic-hero__list-item .visual-label {
+  margin-bottom: 0.35rem;
+}
+
+.clinic-hero .clinic-hero__list-item .text-muted {
+  margin: 0;
+}
+
+.cta__container {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(130deg, #3f7ec5 0%, #5f63cc 38%, #b469b0 72%, #efae79 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 22px 45px rgba(56, 48, 112, 0.25);
+}
+
+.cta__container::before,
+.cta__container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cta__container::before {
+  width: 280px;
+  height: 280px;
+  top: -120px;
+  right: -80px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 68%);
+}
+
+.cta__container::after {
+  width: 340px;
+  height: 340px;
+  bottom: -170px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(255, 201, 151, 0.25) 0%, rgba(255, 201, 151, 0) 72%);
+}
+
+.cta__text {
+  position: relative;
+  z-index: 1;
+
+  p {
+    color: rgba(255, 255, 255, 0.96);
+  }
+}
+
+.cta__subtext {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cta__container .form {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(18, 20, 28, 0.08);
+  box-shadow: 0 10px 26px rgba(18, 20, 28, 0.16);
+}
+
+.cta__container .form__group label {
+  color: #212737;
+}
+
+.cta__container .form__group input,
+.cta__container .form__group select,
+.cta__container .form__group textarea {
+  background: #fff;
+  border-color: rgba(18, 20, 28, 0.15);
+}
+
+.cta__container .form__agree {
+  color: #646d80;
+}
+
+.cta__container .cta__success {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  p {
+    max-width: 640px;
+  }
+}
+
+.hero-shell {
+  position: relative;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: 2rem;
+  padding: 3.35rem 3rem 1.35rem;
+  box-shadow: $shadow-lg;
+  text-align: center;
+}
+
+.hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: rgba(16, 18, 24, 0.06);
+  color: $color-text-muted;
+  border: 1px solid rgba(16, 18, 24, 0.08);
+  border-radius: $radius-full;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.15rem;
+}
+
+.hero__title {
+  font-size: clamp(2rem, 4vw, 3.55rem);
+  max-width: 900px;
+  margin: 0 auto 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hero__subtitle {
+  font-size: 1.05rem;
+  max-width: 680px;
+  margin-bottom: 1.4rem;
+}
+
+.hero__note {
+  font-size: 0.9rem;
+  color: $color-text-muted;
+  margin-top: -0.3rem;
+  margin-bottom: 1.4rem;
+}
+
+.hero__gallery-strip {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.9rem;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1.2 / 1;
+    object-fit: cover;
+    border-radius: 1.2rem;
+  }
+}
+
+.hero-showcase {
+  margin-top: 1.6rem;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: 2rem;
+  box-shadow: $shadow-lg;
+  padding: 2.1rem;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 1.5rem;
+}
+
+.hero-showcase__copy {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h2 {
+    font-size: clamp(1.8rem, 3.2vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.9rem;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin-bottom: 1.2rem;
+    max-width: 500px;
+  }
+}
+
+.hero-showcase__eyebrow {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $color-text-muted;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-showcase__visual {
+  position: relative;
+  background: $color-bg-dark;
+  border-radius: 1.5rem;
+  padding: 1rem;
+  min-height: 360px;
+}
+
+.hero-showcase__badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: $radius-full;
+  font-size: 0.8rem;
+  padding: 0.38rem 0.82rem;
+}
+
+.hero-showcase__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  height: 100%;
+  align-items: end;
+  padding-top: 2.1rem;
+}
+
+.hero-showcase__card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+
+  img {
+    width: 100%;
+    aspect-ratio: 0.88 / 1;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  p {
+    color: $color-text;
+    font-size: 0.82rem;
+    padding: 0.7rem;
+  }
+}
+
+.quiz__wrapper,
+.quiz-result__card,
+.lead-capture__card,
+.readiness__card,
+.readiness__done {
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  box-shadow: $shadow-md;
+}
+
+.lead-capture__card {
+  background: $color-white;
+  color: $color-text;
+}
+
+.lead-capture__text {
+  h2 {
+    color: $color-text;
+  }
+
+  p,
+  li {
+    color: $color-text-muted;
+  }
+}
+
+.lead-capture__urgency {
+  background: rgba(16, 18, 24, 0.06);
+  color: $color-text !important;
+}
+
+.readiness__icon {
+  color: $color-primary;
+}
+
+.quiz__option:hover,
+.readiness__option:hover {
+  transform: none;
+}
+
+.footer {
+  background: transparent;
+  border-top: 0;
+  padding-bottom: 2rem;
+}
+
+.floating-button-container {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 130;
+}
+
+.floating-button {
+  width: 58px;
+  height: 58px;
+  border: none;
+  border-radius: 50%;
+  background: $color-primary;
+  box-shadow: $shadow-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.floating-button-tooltip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.8rem);
+  width: 210px;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: 0.9rem;
+  box-shadow: $shadow-md;
+  padding: 0.7rem 0.75rem;
+  font-size: 0.8rem;
+  color: $color-text;
+}
+
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  background: $color-white;
+  border-right: 1px solid rgba(10, 14, 20, 0.08);
+  border-bottom: 1px solid rgba(10, 14, 20, 0.08);
+  transform: rotate(45deg);
+}
+
+@media (max-width: 1100px) {
+  .clinic-hero__container {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-shell {
+    padding: 2.4rem 1.8rem 1.2rem;
+  }
+
+  .hero-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-showcase__visual {
+    min-height: 320px;
+  }
+}
+
+@include mobile {
+  .header__shell {
+    padding: 0.75rem 0.9rem;
+    border-radius: 1.1rem;
+  }
+
+  .header__controls {
+    gap: 0.35rem;
+  }
+
+  .header__lang,
+  .header__action {
+    min-height: 34px;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .hero-shell {
+    border-radius: 1.5rem;
+    padding: 2.1rem 1rem 1rem;
+  }
+
+  .clinic-hero__container {
+    border-radius: 1.5rem;
+    padding: 1.2rem;
+    gap: 1.2rem;
+  }
+
+  .clinic-hero__title {
+    font-size: 2.25rem;
+  }
+
+  .clinic-hero .hero__subtitle {
+    font-size: 1rem;
+  }
+
+  .clinic-hero .hero__actions {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .clinic-hero .hero__bg-ambient {
+    display: none;
+  }
+
+  .clinic-hero .hero__visual-card {
+    min-height: 0;
+  }
+
+  .clinic-hero__list {
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  .hero__title {
+    font-size: 2.05rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.98rem;
+  }
+
+  .hero__gallery-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    img:nth-child(5) {
+      display: none;
+    }
+  }
+
+  .hero-showcase {
+    border-radius: 1.5rem;
+    padding: 1.1rem;
+  }
+
+  .hero-showcase__cards {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .hero-showcase__card img {
+    aspect-ratio: 1.3 / 1;
   }
 }

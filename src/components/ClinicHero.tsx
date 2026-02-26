@@ -5,12 +5,12 @@ import { fadeInUp, staggerContainer } from '../styles/animations';
 
 const ClinicHero: React.FC = () => {
   return (
-    <section className="hero">
-      <div className="hero__bg-ambient" />
+    <section className="hero clinic-hero">
+      <div className="hero__bg-ambient clinic-hero__bg-ambient" />
 
-      <div className="container hero__container">
+      <div className="container hero__container clinic-hero__container">
         <motion.div
-          className="hero__content"
+          className="hero__content clinic-hero__content"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
@@ -20,9 +20,8 @@ const ClinicHero: React.FC = () => {
             <span className="badge badge--soft">Комплексний підхід</span>
           </motion.div>
 
-          <motion.h1 variants={fadeInUp} className="hero__title">
-            Доказова допомога{' '}
-            <span className="text-highlight">для вашого ментального здоров'я</span>
+          <motion.h1 variants={fadeInUp} className="hero__title clinic-hero__title">
+            Доказова допомога для вашого ментального здоров&apos;я
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="hero__subtitle">
@@ -60,24 +59,24 @@ const ClinicHero: React.FC = () => {
           <div className="hero__visual-card">
             <div className="abstract-shape"></div>
             <div className="abstract-shape shape--2"></div>
-            <div className="hero__visual-grid">
-              <div>
+            <ul className="hero__visual-grid clinic-hero__list">
+              <li className="clinic-hero__list-item">
                 <p className="visual-label">Індивідуальна діагностика</p>
                 <p className="text-muted">Скринінг, оцінка стану, план підтримки.</p>
-              </div>
-              <div>
+              </li>
+              <li className="clinic-hero__list-item">
                 <p className="visual-label">Технологічні методи</p>
                 <p className="text-muted">VR, нейрофідбек, генетичні тести.</p>
-              </div>
-              <div>
+              </li>
+              <li className="clinic-hero__list-item">
                 <p className="visual-label">Супровід</p>
                 <p className="text-muted">Регулярна перевірка прогресу.</p>
-              </div>
-              <div>
+              </li>
+              <li className="clinic-hero__list-item">
                 <p className="visual-label">Команда</p>
                 <p className="text-muted">Психологи, психіатри, нейрофахівці.</p>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </motion.div>
       </div>
