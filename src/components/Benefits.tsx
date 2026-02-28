@@ -8,17 +8,17 @@ const Benefits: React.FC = () => {
     {
       title: 'Одна команда — одна траєкторія',
       text: 'Психолог оцінює, чи потрібна участь психіатра, і тримає план цілісним.',
-      icon: <ShieldCheck size={20} />,
+      icon: <ShieldCheck size={20} aria-hidden="true" />,
     },
     {
       title: 'Доказовий підхід + інновації',
       text: 'Класична терапія доповнюється VR та нейрофідбеком, коли це доречно.',
-      icon: <Sparkles size={20} />,
+      icon: <Sparkles size={20} aria-hidden="true" />,
     },
     {
       title: 'Повага до темпу клієнта',
       text: 'Без тиску, з прозорою комунікацією та обережністю до складних тем.',
-      icon: <HeartPulse size={20} />,
+      icon: <HeartPulse size={20} aria-hidden="true" />,
     },
   ];
 

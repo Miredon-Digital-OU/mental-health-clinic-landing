@@ -35,10 +35,10 @@ const Services: React.FC = () => {
     ];
 
     const services = [
-        { id: 'psychology', label: 'Психологія', icon: <Brain size={16} /> },
-        { id: 'psychiatry', label: 'Психіатрія', icon: <Activity size={16} /> },
-        { id: 'neuro', label: 'Нейрофідбек', icon: <Glasses size={16} /> },
-        { id: 'genetics', label: 'Генетика', icon: <Dna size={16} /> },
+{ id: 'psychology', label: 'Психологія', icon: <Brain size={16} aria-hidden="true" /> },
+        { id: 'psychiatry', label: 'Психіатрія', icon: <Activity size={16} aria-hidden="true" /> },
+        { id: 'neuro', label: 'Нейрофідбек', icon: <Glasses size={16} aria-hidden="true" /> },
+        { id: 'genetics', label: 'Генетика', icon: <Dna size={16} aria-hidden="true" /> },
     ];
 
     return (
@@ -49,16 +49,28 @@ const Services: React.FC = () => {
                     <p className="section__subtitle mb-4">Гнучкі пакети для будь-яких потреб</p>
                     
                     {/* Toggle */}
-                    <div className="toggle-switch">
+<div className="toggle-switch">
                         <button 
                             className={`toggle-option ${activeTab === 'psychologist' ? 'active' : ''}`}
                             onClick={() => setActiveTab('psychologist')}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setActiveTab('psychologist');
+                                }
+                            }}
                         >
                             З Психологом
                         </button>
                         <button 
                             className={`toggle-option ${activeTab === 'psychiatrist' ? 'active' : ''}`}
                             onClick={() => setActiveTab('psychiatrist')}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setActiveTab('psychiatrist');
+                                }
+                            }}
                         >
                             З Психіатром
                         </button>
@@ -72,12 +84,18 @@ const Services: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="service-selector">
+<div className="service-selector">
                     {services.map((service) => (
                         <button
                             key={service.id}
                             className={`service-chip ${selectedService === service.id ? 'active' : ''}`}
                             onClick={() => setSelectedService(service.id)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setSelectedService(service.id);
+                                }
+                            }}
                             type="button"
                         >
                             {service.icon} {service.label}
@@ -106,7 +124,7 @@ const Services: React.FC = () => {
                                 
                                 <ul className="card__list">
                                     {pkg.features.map((feature, i) => (
-                                        <li key={i}><Check size={16} className="text-primary"/> {feature}</li>
+                                        <li key={i}><Check size={16} className="text-primary" aria-hidden="true"/> {feature}</li>
                                     ))}
                                 </ul>
                                 

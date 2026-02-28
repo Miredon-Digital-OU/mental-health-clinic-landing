@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 type HeaderProps = {
   showLinks?: boolean;
 };
 
 const Header: React.FC<HeaderProps> = ({ showLinks = true }) => {
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+
   return (
     <header className="header">
       <div className="container">
         <div className="header__shell">
           <div className={showLinks ? 'header__container header__container--spread' : 'header__container'}>
-            <a href="#" className="logo">OPORA</a>
+            <motion.a 
+              href="#" 
+              className="logo"
+              onMouseEnter={() => setIsLogoHovered(true)}
+              onMouseLeave={() => setIsLogoHovered(false)}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+            >
+              <motion.span
+                animate={{ 
+                  scale: isLogoHovered ? [1, 1.2, 1] : 1,
+                  rotate: isLogoHovered ? [0, -10, 10, 0] : 0
+                }}
+                transition={{ duration: 0.4 }}
+                style={{ display: 'inline-block' }}
+              >
+                ◉
+              </motion.span>
+              OPORA
+            </motion.a>
 
             {showLinks && (
               <nav className="nav nav--desktop" aria-label="Головна навігація">

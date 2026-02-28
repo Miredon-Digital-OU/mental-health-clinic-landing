@@ -67,7 +67,7 @@ const ClinicLeadForm: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <CheckCircle size={64} className="text-white mb-3" />
+            <CheckCircle size={64} className="text-white mb-3" aria-hidden="true" />
             <h2>Дякуємо!</h2>
             <p>Ми зв'яжемося з вами найближчим часом для уточнення деталей.</p>
           </motion.div>
@@ -219,10 +219,10 @@ const ClinicLeadForm: React.FC = () => {
               className="btn btn--primary btn--block"
               disabled={status === 'submitting' || !isStepValid()}
             >
-              {step < 2
+{step < 2
                 ? 'Далі'
                 : status === 'submitting'
-                ? 'Відправка...'
+                ? 'Відправка…'
                 : (
                   <span className="flex-center gap-2">
                     Записатися <Send size={16} />

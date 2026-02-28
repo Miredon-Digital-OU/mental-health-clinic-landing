@@ -110,14 +110,14 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
                 onFocus={handleFocus}
                 autoComplete="tel"
               />
-              {error && <span className="form__error">{error}</span>}
+              {error && <span className="form__error" role="alert" aria-live="polite">{error}</span>}
             </div>
             <button
               type="submit"
               className="btn btn--primary btn--block"
               disabled={status === 'submitting' || !isValid}
             >
-              {status === 'submitting' ? (
+{status === 'submitting' ? (
                 'Відправка…'
               ) : (
                 <span className="flex-center gap-2">

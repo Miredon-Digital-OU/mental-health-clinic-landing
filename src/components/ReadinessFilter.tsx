@@ -34,7 +34,7 @@ const ReadinessFilter: React.FC<ReadinessFilterProps> = ({ onComplete }) => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <CheckCircle size={56} className="readiness__icon" />
+            <CheckCircle size={56} className="readiness__icon" aria-hidden="true" />
             <h2>Дякуємо!</h2>
             <p>
               Ми зв'яжемося з вами найближчим часом та надамо персональний план.

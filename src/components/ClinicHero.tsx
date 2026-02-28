@@ -37,15 +37,15 @@ const ClinicHero: React.FC = () => {
           </motion.div>
 
           <motion.div variants={fadeInUp} className="hero__chips">
-            <div className="tag">
-              <ShieldCheck size={14} />
+<div className="tag">
+              <ShieldCheck size={14} aria-hidden="true" />
               Конфіденційно • Етичні протоколи
             </div>
             <div className="chips-scroll">
-              <span className="chip"><Brain size={14} /> Психологія</span>
-              <span className="chip"><Activity size={14} /> Психіатрія</span>
-              <span className="chip"><Glasses size={14} /> VR-терапія</span>
-              <span className="chip"><Dna size={14} /> Генетика</span>
+              <span className="chip"><Brain size={14} aria-hidden="true" /> Психологія</span>
+              <span className="chip"><Activity size={14} aria-hidden="true" /> Психіатрія</span>
+              <span className="chip"><Glasses size={14} aria-hidden="true" /> VR-терапія</span>
+              <span className="chip"><Dna size={14} aria-hidden="true" /> Генетика</span>
             </div>
           </motion.div>
         </motion.div>

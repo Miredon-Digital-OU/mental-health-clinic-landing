@@ -40,12 +40,19 @@ const FAQ: React.FC = () => {
                 <div className="accordion">
                     {faqs.map((item, index) => (
                         <div key={index} className="accordion__item">
-                            <button 
+<button 
                                 className="accordion__trigger"
                                 onClick={() => toggle(index)}
-                            >
-                                {item.question}
-                                {openIndex === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    toggle(index);
+                                  }
+                                }}
+                                aria-expanded={openIndex === index}
+                              >
+{item.question}
+                                {openIndex === index ? <ChevronUp size={20} aria-hidden="true" /> : <ChevronDown size={20} aria-hidden="true" />}
                             </button>
                             <AnimatePresence>
                                 {openIndex === index && (
