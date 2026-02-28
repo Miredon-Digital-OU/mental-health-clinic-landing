@@ -28,6 +28,19 @@ h1, h2, h3, h4 {
 
 html {
   scroll-behavior: smooth;
+  min-height: 100dvh;
+}
+
+body {
+  font-family: $font-body;
+  background-color: $color-bg;
+  background-image: radial-gradient(circle at 15% 10%, rgba($color-primary-light, 0.06), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba($color-primary, 0.04), transparent 50%);
+  color: $color-text;
+  line-height: 1.7;
+  overflow-x: hidden;
+  font-size: 1.0625rem;
+  min-height: 100dvh;
 }
 
 a {
@@ -91,7 +104,7 @@ img {
   }
 
   &__title {
-    font-size: 2.5rem;
+    font-size: $text-3xl;
     margin-bottom: 1.5rem;
     color: $color-text;
     font-weight: 700;
@@ -727,6 +740,11 @@ img {
     gap: 2.5rem;
     align-items: flex-start;
 
+    @include tablet {
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+    }
+
     @include mobile {
       flex-direction: column;
       padding: 2rem 1.25rem;
@@ -1143,6 +1161,7 @@ img {
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
   transition: box-shadow 0.2s ease;
+  container-type: inline-size;
 
   &:hover {
     box-shadow: $shadow-md;
@@ -1157,6 +1176,14 @@ img {
   p {
     color: $color-text-muted;
     line-height: 1.65;
+  }
+
+  @container (min-width: 400px) {
+    padding: 2rem;
+
+    h3 {
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -1251,6 +1278,7 @@ img {
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
   transition: box-shadow 0.2s ease;
+  container-type: inline-size;
 
   &:hover {
     box-shadow: $shadow-md;
@@ -1298,6 +1326,10 @@ img {
       font-size: 0.8rem;
       font-weight: 700;
     }
+  }
+
+  @container (min-width: 350px) {
+    padding: 2rem;
   }
 }
 
@@ -1423,6 +1455,12 @@ img {
   padding: 3.5rem;
   border-radius: $radius-lg;
   align-items: center;
+
+  @include tablet {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
 
   @include mobile {
     flex-direction: column;
@@ -2043,6 +2081,18 @@ body {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.9rem;
 
+  @include tablet {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    img:nth-child(5) {
+      display: none;
+    }
+  }
+
   img {
     width: 100%;
     aspect-ratio: 1.2 / 1;
@@ -2168,6 +2218,15 @@ body {
   height: 100%;
   align-items: end;
   padding-top: 2.1rem;
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
 }
 
 .hero-showcase__card {
