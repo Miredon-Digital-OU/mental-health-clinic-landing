@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle } from 'lucide-react';
+import { submitLead } from '../utils/leadApi';
 
 type FormState = {
   name: string;
@@ -26,8 +27,10 @@ const ClinicLeadForm: React.FC = () => {
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [step, setStep] = useState(0);
+  const [error, setError] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setError('');
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -44,7 +47,7 @@ const ClinicLeadForm: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (step < 2) {
       setStep(step + 1);
@@ -52,10 +55,32 @@ const ClinicLeadForm: React.FC = () => {
     }
 
     setStatus('submitting');
-    setTimeout(() => {
-      console.log('Form Submitted:', formData);
+    setError('');
+
+    try {
+      await submitLead({
+        formType: 'clinic-intake',
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        interest: formData.interest,
+        goal: formData.goal.trim(),
+        age: formData.age.trim(),
+        familyHistory: formData.familyHistory,
+        consent: {
+          accepted: true,
+          policyVersion: '2026-02',
+        },
+        metadata: {
+          source: 'clinic-page',
+        },
+      });
       setStatus('success');
-    }, 1500);
+    } catch (submitError) {
+      console.error('Clinic lead submit failed:', submitError);
+      setStatus('idle');
+      setError('Не вдалося відправити форму. Спробуйте ще раз.');
+    }
   };
 
   if (status === 'success') {
@@ -230,6 +255,7 @@ const ClinicLeadForm: React.FC = () => {
                 )}
             </button>
           </div>
+          {error && <span className="form__error" role="alert" aria-live="polite">{error}</span>}
           <p className="form__agree">
             Натискаючи кнопку, ви погоджуєтесь на обробку персональних даних.
           </p>

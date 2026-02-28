@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+
 # Optional: If you eventually add React Router, uncomment the lines below
 # [[redirects]]
 #   from = "/*"

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { trackEvent, EVENTS } from '../utils/analytics';
 import { getVariant } from '../utils/abTesting';
+import { submitLead } from '../utils/leadApi';
 
 const isValidUAPhone = (value: string): boolean => {
   const cleaned = value.replace(/[\s\-()]/g, '');
@@ -42,7 +43,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     if (!isValidContact(contact.trim())) {
@@ -51,11 +52,28 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
     }
 
     setStatus('submitting');
-    trackEvent(EVENTS.LEAD_SUBMITTED);
-    console.log('Lead captured:', { name, contact, form_trigger_variant: variant });
-    setTimeout(() => {
+    setError('');
+
+    try {
+      await submitLead({
+        formType: 'lead-capture',
+        name: name.trim(),
+        contact: contact.trim(),
+        consent: {
+          accepted: true,
+          policyVersion: '2026-02',
+        },
+        metadata: {
+          source: `quiz-flow-${variant}`,
+        },
+      });
+      trackEvent(EVENTS.LEAD_SUBMITTED);
       onSubmitted();
-    }, 800);
+    } catch (submitError) {
+      console.error('Lead submit failed:', submitError);
+      setStatus('idle');
+      setError('Не вдалося відправити форму. Спробуйте ще раз.');
+    }
   };
 
   return (
