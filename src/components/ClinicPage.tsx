@@ -13,10 +13,14 @@ import BottomCTA from './BottomCTA';
 import Footer from './Footer';
 import StickyCTA from './StickyCTA';
 
-const ClinicPage: React.FC = () => {
+type ClinicPageProps = {
+  onBackToStart?: () => void;
+};
+
+const ClinicPage: React.FC<ClinicPageProps> = ({ onBackToStart }) => {
   return (
     <div className="app">
-      <ClinicHeader />
+      <ClinicHeader onBackToStart={onBackToStart} />
       <main>
         <ClinicHero />
         <PainPoints />

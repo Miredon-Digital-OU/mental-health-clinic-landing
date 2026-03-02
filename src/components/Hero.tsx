@@ -73,7 +73,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           <motion.h1 variants={fadeInUp} className="hero__title">
             {variant === 'A'
               ? 'Разом перетворюємо складний шлях до відновлення у зрозумілий план'
-              : 'Підібраний формат підтримки для вашого стану без здогадок та хаосу'}
+              : 'Зрозуміти свій стан і отримати правильну допомогу. Знайдіть свою точку опори з нами'}
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="hero__subtitle">

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
-const ClinicHeader: React.FC = () => {
+type ClinicHeaderProps = {
+  onBackToStart?: () => void;
+};
+
+const ClinicHeader: React.FC<ClinicHeaderProps> = ({ onBackToStart }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -8,7 +12,11 @@ const ClinicHeader: React.FC = () => {
       <div className="container">
         <div className="header__shell">
           <div className="header__container header__container--spread">
-            <a href="#" className="logo">OPORA</a>
+            {onBackToStart ? (
+              <button onClick={onBackToStart} className="logo logo--link">OPORA</button>
+            ) : (
+              <a href="#" className="logo">OPORA</a>
+            )}
 
             <button
               className="mobile-menu-toggle"

@@ -61,9 +61,14 @@ function App() {
     scrollToTop();
   };
 
-  // Clinic page is a full standalone view
+  const handleBackToStart = () => {
+    setStage('hero');
+    setQuizAnswers(null);
+    scrollToTop();
+  };
+
   if (stage === 'clinic') {
-    return <ClinicPage />;
+    return <ClinicPage onBackToStart={handleBackToStart} />;
   }
 
   const showHeaderLinks = false;
