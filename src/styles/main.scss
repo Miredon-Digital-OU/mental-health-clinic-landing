@@ -2095,7 +2095,7 @@ body {
   @include mobile {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    img:nth-child(5) {
+    .hero-gallery-item:nth-child(5) {
       display: none;
     }
   }
@@ -2113,18 +2113,29 @@ body {
   overflow: hidden;
   border-radius: 1.2rem;
   cursor: pointer;
+  padding: 0;
+  border: 1px solid transparent;
+  display: block;
+  width: 100%;
+  background: transparent;
+  text-align: left;
 
   img {
     width: 100%;
     aspect-ratio: 1.2 / 1;
     object-fit: cover;
     border-radius: 1.2rem;
-    transition: transform 0.4s ease;
   }
+}
 
-  &:hover img {
-    transform: scale(1.08);
-  }
+.hero-gallery-item--active {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+}
+
+.hero-gallery-item:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.9);
+  outline-offset: 2px;
 }
 
 .hero-gallery-item__overlay {
@@ -2135,12 +2146,7 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   padding: 0.9rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  .hero-gallery-item:hover & {
-    opacity: 1;
-  }
+  opacity: 1;
 }
 
 .hero-gallery-item__case {
@@ -2248,11 +2254,6 @@ body {
     aspect-ratio: 0.88 / 1;
     object-fit: cover;
     border-radius: 1rem 1rem 0 0;
-    transition: transform 0.4s ease;
-  }
-
-  &:hover img {
-    transform: scale(1.08);
   }
 
   p {
@@ -2267,14 +2268,6 @@ body {
   gap: 0.4rem;
   padding: 0 0.7rem 0.7rem;
   flex-wrap: wrap;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-
-  .hero-showcase__card:hover & {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .service-tag {
@@ -2460,7 +2453,7 @@ body {
   .hero__gallery-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    img:nth-child(5) {
+    .hero-gallery-item:nth-child(5) {
       display: none;
     }
   }
