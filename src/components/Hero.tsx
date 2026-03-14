@@ -33,7 +33,7 @@ const heroTopicOrder: TopicKey[] = ['anxiety', 'depression', 'burnout', 'ptsd', 
 
 const heroTopics: Record<TopicKey, TopicData> = {
   anxiety: {
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1542820893-f3d652b53f50?auto=format&fit=crop&w=700&q=80',
     case: 'Тривожність',
     description: 'Постійне напруження та занепокоєння',
     showcase: {
@@ -62,7 +62,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   depression: {
-    image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1580141958900-f704c410ba0e?auto=format&fit=crop&w=700&q=80',
     case: 'Депресія',
     description: 'Апатія, втома, втрата інтересу',
     showcase: {
@@ -91,7 +91,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   burnout: {
-    image: 'https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1713946598253-59d6418cb85b?auto=format&fit=crop&w=700&q=80',
     case: 'Вигорання',
     description: 'Емоційне та фізичне виснаження',
     showcase: {
@@ -120,7 +120,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   ptsd: {
-    image: 'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1656014570709-7437353f5907?auto=format&fit=crop&w=700&q=80',
     case: 'ПТСР',
     description: 'Наслідки травматичних подій',
     showcase: {
@@ -132,24 +132,24 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Стабілізація та безпека',
-          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1524088484081-4ca7e08e3e19?auto=format&fit=crop&w=700&q=80',
           services: ['Психотерапія', 'Навички саморегуляції'],
         },
         {
           title: 'Фокусна робота з травмою',
-          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1620077399971-431e7ea0cf0c?auto=format&fit=crop&w=700&q=80',
           services: ['Експозиційна терапія', 'EMDR'],
         },
         {
           title: 'Підтримка та інтеграція',
-          image: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1664137168109-ef2655d148a7?auto=format&fit=crop&w=700&q=80',
           services: ['Групова підтримка', 'Супровід'],
         },
       ],
     },
   },
   relationships: {
-    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1603503554019-dbf74fe7ab5a?auto=format&fit=crop&w=700&q=80',
     case: 'Стосунки',
     description: 'Труднощі в комунікації',
     showcase: {
