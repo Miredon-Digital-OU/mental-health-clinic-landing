@@ -5,7 +5,7 @@ import { fadeInUp, staggerContainer } from '../styles/animations';
 import { getVariant } from '../utils/abTesting';
 
 type HeroProps = {
-  onStartQuiz: () => void;
+  onStartQuiz: (placement: 'hero' | 'mid' | 'lower') => void;
 };
 
 type TopicKey = 'anxiety' | 'depression' | 'burnout' | 'ptsd' | 'relationships';
@@ -33,7 +33,7 @@ const heroTopicOrder: TopicKey[] = ['anxiety', 'depression', 'burnout', 'ptsd', 
 
 const heroTopics: Record<TopicKey, TopicData> = {
   anxiety: {
-    image: 'https://images.unsplash.com/photo-1542820893-f3d652b53f50?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1594718200327-17b749e753e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Тривожність',
     description: 'Постійне напруження та занепокоєння',
     showcase: {
@@ -45,24 +45,24 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Діагностика та стабілізація',
-          image: 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1758273240631-59d44c8f5b66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психологія', 'Нейрофідбек'],
         },
         {
           title: 'Фокусна терапія тривоги',
-          image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1714976694810-85add1a29c96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психотерапія', 'VR-терапія'],
         },
         {
           title: 'Підтримка результату',
-          image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1758273241078-8eec353836be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Супровід', 'Профілактика'],
         },
       ],
     },
   },
   depression: {
-    image: 'https://images.unsplash.com/photo-1580141958900-f704c410ba0e?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1607688387751-c1e95ae09a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Депресія',
     description: 'Апатія, втома, втрата інтересу',
     showcase: {
@@ -74,24 +74,24 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Діагностика та маршрут',
-          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1597414169056-78e613b17549?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психіатрія', 'Оцінка стану'],
         },
         {
           title: 'Фокусна терапія депресії',
-          image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1758273240403-052b3c99f636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психотерапія', 'Нейрофідбек'],
         },
         {
           title: 'Закріплення та профілактика',
-          image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1683210394660-ab1b47c791ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Профілактика рецидивів', 'Супровід'],
         },
       ],
     },
   },
   burnout: {
-    image: 'https://images.unsplash.com/photo-1713946598253-59d6418cb85b?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1636191284490-fff58f369ec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Вигорання',
     description: 'Емоційне та фізичне виснаження',
     showcase: {
@@ -103,24 +103,24 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Оцінка перевантаження',
-          image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1698047681465-a75bcf38379e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психологія', 'Нейрофідбек'],
         },
         {
           title: 'Фокус на відновлення ресурсу',
-          image: 'https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1696453424699-f6ebbe24c28a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психотерапія', 'Поведінкові практики'],
         },
         {
           title: 'Новий робочий баланс',
-          image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1696453423785-727e165462c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Супровід', 'Профілактика'],
         },
       ],
     },
   },
   ptsd: {
-    image: 'https://images.unsplash.com/photo-1656014570709-7437353f5907?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1650296390057-06aab57bc288?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'ПТСР',
     description: 'Наслідки травматичних подій',
     showcase: {
@@ -132,24 +132,24 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Стабілізація та безпека',
-          image: 'https://images.unsplash.com/photo-1524088484081-4ca7e08e3e19?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1608483501815-bb9932a754db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психотерапія', 'Навички саморегуляції'],
         },
         {
           title: 'Фокусна робота з травмою',
-          image: 'https://images.unsplash.com/photo-1620077399971-431e7ea0cf0c?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1714976694867-bc0e012fab70?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Експозиційна терапія', 'EMDR'],
         },
         {
           title: 'Підтримка та інтеграція',
-          image: 'https://images.unsplash.com/photo-1664137168109-ef2655d148a7?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1770935472590-53151cd5ed26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Групова підтримка', 'Супровід'],
         },
       ],
     },
   },
   relationships: {
-    image: 'https://images.unsplash.com/photo-1603503554019-dbf74fe7ab5a?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1520440135183-d907c129b3e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Стосунки',
     description: 'Труднощі в комунікації',
     showcase: {
@@ -161,17 +161,17 @@ const heroTopics: Record<TopicKey, TopicData> = {
       cards: [
         {
           title: 'Діагностика динаміки стосунків',
-          image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1604881991405-b273c7a4386a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Сімейна терапія', 'Оцінка конфліктів'],
         },
         {
           title: 'Комунікація без ескалації',
-          image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1758524944783-0ec215baf777?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Психотерапія', 'Навички діалогу'],
         },
         {
           title: 'Закріплення нових сценаріїв',
-          image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=80',
+          image: 'https://images.unsplash.com/photo-1604785800517-e972a4c16f2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
           services: ['Супровід', 'Домашні практики'],
         },
       ],
@@ -224,7 +224,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
             <button
               type="button"
               className="btn btn--primary btn--lg"
-              onClick={onStartQuiz}
+              onClick={() => onStartQuiz('hero')}
             >
               Пройти тест за 60 секунд <ArrowRight size={18} style={{ marginLeft: 8 }} />
             </button>
@@ -280,8 +280,12 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
             <p className="hero-showcase__eyebrow">{selectedTopic.showcase.eyebrow}</p>
             <h2>{selectedTopic.showcase.title}</h2>
             <p>{selectedTopic.showcase.description}</p>
-            <button type="button" className="btn btn--primary btn--sm" onClick={onStartQuiz}>
-              Підібрати програму
+            <button
+              type="button"
+              className="btn btn--primary btn--sm"
+              onClick={() => onStartQuiz('mid')}
+            >
+              Пройти тест за 60 секунд
             </button>
           </div>
 
@@ -304,6 +308,24 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
             </div>
           </div>
         </motion.div>
+
+        <motion.section
+          className="hero-lower-cta"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2>Готові отримати персональну рекомендацію?</h2>
+          <p>Тест займає близько хвилини. Після нього ви побачите наступний крок саме для вашого стану.</p>
+          <button
+            type="button"
+            className="btn btn--primary btn--lg"
+            onClick={() => onStartQuiz('lower')}
+          >
+            Пройти тест за 60 секунд <ArrowRight size={18} style={{ marginLeft: 8 }} />
+          </button>
+        </motion.section>
       </div>
     </section>
   );

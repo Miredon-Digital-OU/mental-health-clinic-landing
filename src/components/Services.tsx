@@ -1,143 +1,131 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Brain, Activity, Dna, Glasses } from 'lucide-react';
+import { Activity, Brain, ChevronDown, Dna, Glasses } from 'lucide-react';
+
+type ServiceCard = {
+  id: 'neurofeedback' | 'vr' | 'genotyping' | 'mental-care';
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  details: string[];
+};
+
+const cards: ServiceCard[] = [
+  {
+    id: 'neurofeedback',
+    title: 'Нейрофідбек',
+    subtitle: 'Тренування саморегуляції мозку без медикаментів.',
+    icon: <Glasses size={18} aria-hidden="true" />,
+    details: [
+      'Підходить при тривожності, виснаженні та складнощах із концентрацією.',
+      'Ми відстежуємо реакції мозку в реальному часі та поступово формуємо стабільні патерни саморегуляції.',
+      'Сесії добре поєднуються з психотерапією як частина комплексного плану.',
+    ],
+  },
+  {
+    id: 'vr',
+    title: 'VR-терапія',
+    subtitle: 'Контрольоване опрацювання тригерів у безпечному форматі.',
+    icon: <Activity size={18} aria-hidden="true" />,
+    details: [
+      'Застосовується для роботи з травматичним досвідом, фобіями та сильними реакціями на стрес.',
+      'Сценарій підбирається індивідуально: від мʼякої адаптації до цільової експозиції.',
+      'Кожен етап проходить під супроводом фахівця, з чіткими критеріями безпеки.',
+    ],
+  },
+  {
+    id: 'genotyping',
+    title: 'Генотипування',
+    subtitle: 'Додатковий рівень персоналізації плану лікування.',
+    icon: <Dna size={18} aria-hidden="true" />,
+    details: [
+      'Дослідження генетичних маркерів допомагає точніше оцінити ризики і чутливість до окремих підходів.',
+      'Використовується як допоміжний інструмент, а не як самостійний діагноз.',
+      'Результати пояснюємо простою мовою і вбудовуємо в загальний терапевтичний план.',
+    ],
+  },
+  {
+    id: 'mental-care',
+    title: 'Психологія та психіатрія',
+    subtitle: 'Єдина команда, що працює в узгодженому маршруті.',
+    icon: <Brain size={18} aria-hidden="true" />,
+    details: [
+      'Психолог допомагає стабілізувати стан і розібратися з причинами симптомів.',
+      'Психіатр долучається за показами, коли потрібна медична оцінка або медикаментозна підтримка.',
+      'Ви отримуєте послідовний супровід замість розрізнених консультацій у різних місцях.',
+    ],
+  },
+];
 
 const Services: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'psychologist' | 'psychiatrist'>('psychologist');
-    const [selectedService, setSelectedService] = useState('psychology');
+  const [expandedId, setExpandedId] = useState<ServiceCard['id'] | null>(null);
 
-    const packages = [
-        {
-            title: 'Старт',
-            price: '₴ • Діапазон',
-            features: ['Первинна консультація', 'Тестування на тривожність', 'Рекомендації'],
-            primary: false
-        },
-        {
-            title: 'Базовий',
-            price: '₴₴ • Діапазон',
-            features: ['4 сесії на місяць', 'Чат підтримки 24/7', 'Щоденник емоцій'],
-            primary: false
-        },
-        {
-            title: 'Комплексний',
-            price: '₴₴₴ • Діапазон',
-            features: ['Психотерапія + Психіатр', 'Нейрофідбек (2 сеанси)', 'Генетичний чек-ап'],
-            primary: true,
-            badge: 'Найпопулярніший'
-        },
-        {
-            title: 'Преміум',
-            price: '₴₴₴₴ • Діапазон',
-            features: ['Повний супровід 24/7', 'Всі види терапії (VR, Bio)', 'Сімейні сесії'],
-            primary: false
-        }
-    ];
+  const toggleCard = (cardId: ServiceCard['id']) => {
+    setExpandedId((prev) => (prev === cardId ? null : cardId));
+  };
 
-    const services = [
-{ id: 'psychology', label: 'Психологія', icon: <Brain size={16} aria-hidden="true" /> },
-        { id: 'psychiatry', label: 'Психіатрія', icon: <Activity size={16} aria-hidden="true" /> },
-        { id: 'neuro', label: 'Нейрофідбек', icon: <Glasses size={16} aria-hidden="true" /> },
-        { id: 'genetics', label: 'Генетика', icon: <Dna size={16} aria-hidden="true" /> },
-    ];
+  return (
+    <section id="services" className="section services">
+      <div className="container">
+        <div className="text-center mb-5">
+          <h2 className="section__title">Методи, які підсилюють терапію</h2>
+          <p className="section__subtitle mb-4">
+            Розкрийте картку, щоб коротко побачити, кому і коли цей підхід може підійти.
+          </p>
+        </div>
 
-    return (
-        <section id="services" className="section services">
-            <div className="container">
-                <div className="text-center mb-5">
-                    <h2 className="section__title">Оберіть свій шлях</h2>
-                    <p className="section__subtitle mb-4">Гнучкі пакети для будь-яких потреб</p>
-                    
-                    {/* Toggle */}
-<div className="toggle-switch">
-                        <button 
-                            className={`toggle-option ${activeTab === 'psychologist' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('psychologist')}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    setActiveTab('psychologist');
-                                }
-                            }}
-                        >
-                            З Психологом
-                        </button>
-                        <button 
-                            className={`toggle-option ${activeTab === 'psychiatrist' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('psychiatrist')}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    setActiveTab('psychiatrist');
-                                }
-                            }}
-                        >
-                            З Психіатром
-                        </button>
-                    </div>
-                </div>
+        <div className="services-cards-grid">
+          {cards.map((card) => {
+            const isExpanded = expandedId === card.id;
 
-                <div className="services__intro text-center">
-                    <p className="text-muted">
-                        Оберіть напрямок, щоб ми краще зрозуміли ваш запит.
-                        {activeTab === 'psychiatrist' && ' Перший крок все одно — клінічна оцінка.'}
-                    </p>
-                </div>
+            return (
+              <article key={card.id} className={`service-expand-card ${isExpanded ? 'service-expand-card--open' : ''}`}>
+                <button
+                  type="button"
+                  className="service-expand-card__trigger"
+                  onClick={() => toggleCard(card.id)}
+                  aria-expanded={isExpanded}
+                  aria-controls={`service-panel-${card.id}`}
+                >
+                  <span className="service-expand-card__title-wrap">
+                    <span className="service-expand-card__icon">{card.icon}</span>
+                    <span>
+                      <span className="service-expand-card__title">{card.title}</span>
+                      <span className="service-expand-card__subtitle">{card.subtitle}</span>
+                    </span>
+                  </span>
+                  <ChevronDown
+                    size={18}
+                    className={`service-expand-card__chevron ${isExpanded ? 'service-expand-card__chevron--open' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
 
-<div className="service-selector">
-                    {services.map((service) => (
-                        <button
-                            key={service.id}
-                            className={`service-chip ${selectedService === service.id ? 'active' : ''}`}
-                            onClick={() => setSelectedService(service.id)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    setSelectedService(service.id);
-                                }
-                            }}
-                            type="button"
-                        >
-                            {service.icon} {service.label}
-                        </button>
-                    ))}
-                </div>
-                <p className="text-center text-muted mb-4">
-                    Обраний напрямок: {services.find((service) => service.id === selectedService)?.label}
-                </p>
-
-                <div className="grid grid--4-col">
-                    <AnimatePresence mode='wait'>
-                        {packages.map((pkg, index) => (
-                            <motion.div 
-                                key={pkg.title}
-                                className={`card card--price ${pkg.primary ? 'card--featured' : ''}`}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                whileHover={{ y: -10 }}
-                            >
-                                {pkg.badge && <div className="badge-corner">{pkg.badge}</div>}
-                                <h3 className="card__title">{pkg.title}</h3>
-                                <div className="card__price">{pkg.price}</div>
-                                
-                                <ul className="card__list">
-                                    {pkg.features.map((feature, i) => (
-                                        <li key={i}><Check size={16} className="text-primary" aria-hidden="true"/> {feature}</li>
-                                    ))}
-                                </ul>
-                                
-                                <a href="#contact" className={`btn btn--sm ${pkg.primary ? 'btn--primary' : 'btn--outline'}`}>
-                                    Отримати пропозицію
-                                </a>
-                            </motion.div>
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      id={`service-panel-${card.id}`}
+                      className="service-expand-card__content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    >
+                      <div className="service-expand-card__content-inner">
+                        {card.details.map((item) => (
+                          <p key={item}>{item}</p>
                         ))}
-                    </AnimatePresence>
-                </div>
-            </div>
-        </section>
-    );
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Services;

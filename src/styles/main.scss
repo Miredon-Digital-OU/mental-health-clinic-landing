@@ -559,14 +559,25 @@ img {
   }
 
   &__progress-step {
+    border: none;
     height: 5px;
     flex: 1;
     background: rgba(0, 0, 0, 0.06);
     border-radius: $radius-full;
     transition: background 0.3s ease;
+    padding: 0;
 
     &--active {
       background: $color-secondary; // bright accent for progress bar
+    }
+
+    &--clickable {
+      cursor: pointer;
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 1;
     }
   }
 
@@ -637,21 +648,45 @@ img {
     }
   }
 
-  &__back {
+  &__controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &__back,
+  &__restart {
     position: static;
-    margin-top: 1.25rem;
     background: none;
-    border: none;
+    border: 1px solid rgba(10, 14, 20, 0.16);
+    border-radius: $radius-full;
     color: $color-text-muted;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     font-family: $font-body;
-    padding: 0.5rem 0;
+    padding: 0.45rem 0.95rem;
     min-height: 44px;
-    text-align: left;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    transition: border-color 0.2s ease, color 0.2s ease;
 
     &:hover {
       color: $color-primary;
+      border-color: $color-primary;
+    }
+
+    @include mobile {
+      width: 100%;
     }
   }
 }
@@ -1197,7 +1232,7 @@ img {
 // Timeline Steps
 .steps__timeline {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   position: relative;
   margin-top: 3rem;
@@ -1293,11 +1328,17 @@ img {
 
   &--problem {
     p {
-      font-style: italic;
+      font-style: normal;
       border-left: 3px solid $color-primary-light;
       padding-left: 1rem;
       color: $color-text;
       line-height: 1.65;
+    }
+
+    strong {
+      display: inline-block;
+      margin-bottom: 0.25rem;
+      color: $color-primary;
     }
   }
 
@@ -1388,36 +1429,97 @@ img {
 }
 
 // Services
-.services__intro {
-  max-width: 720px;
-  margin: 0 auto 2rem;
+.services-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
 }
 
-.service-selector {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.service-chip {
-  border-radius: $radius-full;
-  padding: 0.65rem 1.35rem;
-  border: 1px solid rgba(0,0,0,0.08);
+.service-expand-card {
   background: $color-white;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: 0.2s ease;
-  min-height: 44px;
+  border: 1px solid rgba(10, 14, 20, 0.1);
+  border-radius: 1.1rem;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
 
-  &.active {
-    border-color: $color-primary;
-    color: $color-primary;
-    background: rgba($color-primary, 0.05);
-    box-shadow: $shadow-sm;
+.service-expand-card--open {
+  border-color: rgba(14, 82, 114, 0.4);
+}
+
+.service-expand-card__trigger {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.service-expand-card__title-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.service-expand-card__icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+  background: rgba(14, 82, 114, 0.1);
+  color: $color-primary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.service-expand-card__title {
+  display: block;
+  color: $color-text;
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-bottom: 0.2rem;
+}
+
+.service-expand-card__subtitle {
+  display: block;
+  color: $color-text-muted;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.service-expand-card__chevron {
+  color: $color-text-muted;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.service-expand-card__chevron--open {
+  transform: rotate(180deg);
+}
+
+.service-expand-card__content {
+  overflow: hidden;
+}
+
+.service-expand-card__content-inner {
+  padding: 0 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+
+  p {
+    color: $color-text-muted;
+    line-height: 1.55;
   }
 }
 
@@ -2082,6 +2184,32 @@ body {
   margin-bottom: 1.4rem;
 }
 
+.hero-lower-cta {
+  margin-top: 1.2rem;
+  background: $color-white;
+  border: 1px solid rgba(10, 14, 20, 0.08);
+  border-radius: 2rem;
+  box-shadow: $shadow-md;
+  padding: 1.8rem;
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $color-text-muted;
+    max-width: 700px;
+    margin: 0 auto 1rem;
+  }
+
+  @include mobile {
+    border-radius: 1.4rem;
+    padding: 1.25rem 1rem;
+  }
+}
+
 .hero__gallery-strip {
   margin-top: 1.4rem;
   display: grid;
@@ -2332,16 +2460,25 @@ body {
 }
 
 .floating-button {
-  width: 58px;
-  height: 58px;
+  min-height: 52px;
+  padding: 0.75rem 1rem;
   border: none;
-  border-radius: 50%;
+  border-radius: $radius-full;
   background: $color-primary;
   box-shadow: $shadow-lg;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.45rem;
   cursor: pointer;
+  color: $color-white;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.floating-button--cta {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .floating-button-tooltip {

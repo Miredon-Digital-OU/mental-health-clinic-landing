@@ -10,17 +10,33 @@ import ClinicPage from './components/ClinicPage';
 import FloatingButton from './components/FloatingButton';
 import type { QuizAnswers } from './components/Quiz';
 import { trackEvent, EVENTS } from './utils/analytics';
+import { captureAttribution } from './utils/attribution';
 
 type AppStage = 'hero' | 'quiz' | 'result' | 'lead' | 'readiness' | 'clinic';
+type CtaPlacement = 'hero' | 'mid' | 'lower' | 'floating';
 
 function App() {
   const [stage, setStage] = useState<AppStage>('hero');
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers | null>(null);
+  const [quizStartedAt, setQuizStartedAt] = useState<string | null>(null);
+  const [entryPlacement, setEntryPlacement] = useState<CtaPlacement>('hero');
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    trackEvent(EVENTS.PAGE_LOADED);
+    const attribution = captureAttribution();
+    trackEvent(EVENTS.PAGE_LOADED, {
+      page: 'landing',
+      utm_source: attribution?.utmSource,
+      utm_medium: attribution?.utmMedium,
+      utm_campaign: attribution?.utmCampaign,
+    });
   }, []);
+
+  useEffect(() => {
+    trackEvent(EVENTS.APP_STAGE_VIEWED, {
+      stage,
+    });
+  }, [stage]);
 
   const scrollToTop = () => {
     setTimeout(() => {
@@ -34,8 +50,19 @@ function App() {
     }, 100);
   };
 
-  const handleStartQuiz = () => {
-    trackEvent(EVENTS.TEST_STARTED);
+  const handleStartQuiz = (placement: CtaPlacement) => {
+    const attribution = captureAttribution();
+    setEntryPlacement(placement);
+    setQuizStartedAt(new Date().toISOString());
+    trackEvent(EVENTS.CTA_CLICKED, {
+      placement,
+      cta_text: 'take_test_in_60_seconds',
+      utm_campaign: attribution?.utmCampaign,
+    });
+    trackEvent(EVENTS.TEST_STARTED, {
+      placement,
+      utm_campaign: attribution?.utmCampaign,
+    });
     setStage('quiz');
     scrollToMain();
   };
@@ -64,6 +91,7 @@ function App() {
   const handleBackToStart = () => {
     setStage('hero');
     setQuizAnswers(null);
+    setQuizStartedAt(null);
     scrollToTop();
   };
 
@@ -84,12 +112,19 @@ function App() {
           {stage === 'result' && quizAnswers && (
             <QuizResult answers={quizAnswers} onContinue={handleResultContinue} />
           )}
-          {stage === 'lead' && <LeadForm onSubmitted={handleLeadSubmitted} />}
+          {stage === 'lead' && (
+            <LeadForm
+              onSubmitted={handleLeadSubmitted}
+              answers={quizAnswers}
+              entryPlacement={entryPlacement}
+              quizStartedAt={quizStartedAt}
+            />
+          )}
           {stage === 'readiness' && <ReadinessFilter onComplete={handleReadinessComplete} />}
         </div>
       </main>
       <Footer />
-      {stage === 'hero' && <FloatingButton onClick={handleStartQuiz} />}
+      {stage === 'hero' && <FloatingButton onClick={() => handleStartQuiz('floating')} />}
     </div>
   );
 }

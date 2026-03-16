@@ -15,6 +15,25 @@ export type LeadPayload = {
   };
   metadata?: {
     source?: string;
+    entryPlacement?: string;
+    quizStartedAt?: string;
+    submittedAtClient?: string;
+    campaignId?: string;
+    funnelStage?: string;
+    quizAnswers?: Record<string, string>;
+    attribution?: {
+      landingPath?: string;
+      referrer?: string;
+      utmSource?: string;
+      utmMedium?: string;
+      utmCampaign?: string;
+      utmTerm?: string;
+      utmContent?: string;
+      gclid?: string;
+      fbclid?: string;
+      msclkid?: string;
+      firstSeenAt?: string;
+    };
   };
 };
 

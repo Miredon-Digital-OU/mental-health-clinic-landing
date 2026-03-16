@@ -5,6 +5,8 @@ import { Send } from 'lucide-react';
 import { trackEvent, EVENTS } from '../utils/analytics';
 import { getVariant } from '../utils/abTesting';
 import { submitLead } from '../utils/leadApi';
+import { captureAttribution } from '../utils/attribution';
+import type { QuizAnswers } from './Quiz';
 
 const isValidUAPhone = (value: string): boolean => {
   const cleaned = value.replace(/[\s\-()]/g, '');
@@ -24,9 +26,12 @@ const isValidContact = (value: string): boolean => {
 
 type LeadFormProps = {
   onSubmitted: () => void;
+  answers: QuizAnswers | null;
+  entryPlacement: 'hero' | 'mid' | 'lower' | 'floating';
+  quizStartedAt: string | null;
 };
 
-const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
+const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted, answers, entryPlacement, quizStartedAt }) => {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting'>('idle');
@@ -39,14 +44,20 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
   const handleFocus = () => {
     if (!hasStarted) {
       setHasStarted(true);
-      trackEvent(EVENTS.FORM_STARTED);
+      trackEvent(EVENTS.FORM_STARTED, {
+        form_name: 'lead_capture',
+        entry_placement: entryPlacement,
+      });
     }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const attribution = captureAttribution();
+    const trimmedContact = contact.trim();
+    const contactType = isValidEmail(trimmedContact) ? 'email' : 'phone';
     
-    if (!isValidContact(contact.trim())) {
+    if (!isValidContact(trimmedContact)) {
       setError('Введіть український номер телефону (+380...) або email');
       return;
     }
@@ -58,21 +69,39 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted }) => {
       await submitLead({
         formType: 'lead-capture',
         name: name.trim(),
-        contact: contact.trim(),
+        contact: trimmedContact,
         consent: {
           accepted: true,
           policyVersion: '2026-02',
         },
         metadata: {
           source: `quiz-flow-${variant}`,
+          entryPlacement,
+          quizStartedAt: quizStartedAt ?? undefined,
+          submittedAtClient: new Date().toISOString(),
+          campaignId: attribution?.utmCampaign,
+          funnelStage: 'lead_form',
+          quizAnswers: answers ?? undefined,
+          attribution: attribution ?? undefined,
         },
       });
-      trackEvent(EVENTS.LEAD_SUBMITTED);
+
+      trackEvent(EVENTS.LEAD_SUBMITTED, {
+        form_name: 'lead_capture',
+        contact_type: contactType,
+        entry_placement: entryPlacement,
+        has_quiz_answers: Boolean(answers),
+      });
       onSubmitted();
     } catch (submitError) {
       console.error('Lead submit failed:', submitError);
       setStatus('idle');
       setError('Не вдалося відправити форму. Спробуйте ще раз.');
+
+      trackEvent(EVENTS.LEAD_SUBMISSION_FAILED, {
+        form_name: 'lead_capture',
+        entry_placement: entryPlacement,
+      });
     }
   };
 

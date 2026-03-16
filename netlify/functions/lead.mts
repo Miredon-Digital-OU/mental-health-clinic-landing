@@ -4,6 +4,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UA_PHONE_REGEX = /^(\+380|380|0)\d{9}$/;
 
 const ALLOWED_FORM_TYPES = new Set(["lead-capture", "clinic-intake"]);
+const ALLOWED_ENTRY_PLACEMENTS = new Set(["hero", "mid", "lower", "floating"]);
 const ALLOWED_INTERESTS = new Set([
   "psychology",
   "psychiatry",
@@ -12,6 +13,13 @@ const ALLOWED_INTERESTS = new Set([
   "other",
 ]);
 const ALLOWED_FAMILY_HISTORY = new Set(["no", "yes", "unknown"]);
+const ALLOWED_QUIZ_KEYS = new Set([
+  "pain",
+  "experience",
+  "psychiatrist",
+  "methods",
+  "pricing",
+]);
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -42,6 +50,53 @@ const parseAge = (value: unknown): number | null => {
     return null;
   }
   return Math.floor(parsed);
+};
+
+const sanitizeQuizAnswers = (value: unknown): Record<string, string> => {
+  if (!value || typeof value !== "object") {
+    return {};
+  }
+
+  const source = value as Record<string, unknown>;
+  const answers: Record<string, string> = {};
+
+  for (const [key, rawValue] of Object.entries(source)) {
+    if (!ALLOWED_QUIZ_KEYS.has(key)) {
+      continue;
+    }
+
+    const cleaned = cleanText(rawValue, 240);
+    if (cleaned) {
+      answers[key] = cleaned;
+    }
+  }
+
+  return answers;
+};
+
+const sanitizeAttribution = (value: unknown) => {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const source = value as Record<string, unknown>;
+
+  const attribution = {
+    landingPath: cleanText(source.landingPath, 500),
+    referrer: cleanText(source.referrer, 500),
+    utmSource: cleanText(source.utmSource, 120),
+    utmMedium: cleanText(source.utmMedium, 120),
+    utmCampaign: cleanText(source.utmCampaign, 120),
+    utmTerm: cleanText(source.utmTerm, 120),
+    utmContent: cleanText(source.utmContent, 120),
+    gclid: cleanText(source.gclid, 120),
+    fbclid: cleanText(source.fbclid, 120),
+    msclkid: cleanText(source.msclkid, 120),
+    firstSeenAt: cleanText(source.firstSeenAt, 60),
+  };
+
+  const hasAnyValue = Object.values(attribution).some(Boolean);
+  return hasAnyValue ? attribution : undefined;
 };
 
 export default async (request: Request, context: any) => {
@@ -108,6 +163,17 @@ export default async (request: Request, context: any) => {
 
   const goal = cleanText(payload?.goal, 1000);
   const age = parseAge(payload?.age);
+  const entryPlacement = cleanText(payload?.metadata?.entryPlacement, 20);
+  const campaignId = cleanText(payload?.metadata?.campaignId, 120);
+  const funnelStage = cleanText(payload?.metadata?.funnelStage, 80);
+  const quizStartedAt = cleanText(payload?.metadata?.quizStartedAt, 60);
+  const submittedAtClient = cleanText(payload?.metadata?.submittedAtClient, 60);
+  const attribution = sanitizeAttribution(payload?.metadata?.attribution);
+  const answerSet = sanitizeQuizAnswers(payload?.metadata?.quizAnswers);
+
+  if (entryPlacement && !ALLOWED_ENTRY_PLACEMENTS.has(entryPlacement)) {
+    return json(400, { error: "Invalid entry placement" });
+  }
 
   const submissionId = crypto.randomUUID();
   const submittedAt = new Date().toISOString();
@@ -125,10 +191,16 @@ export default async (request: Request, context: any) => {
     goal: goal || undefined,
     age,
     familyHistory: familyHistory || undefined,
+    answerSet: Object.keys(answerSet).length > 0 ? answerSet : undefined,
     consent: {
       accepted: true,
       policyVersion: consentVersion,
       acceptedAt: submittedAt,
+    },
+    timing: {
+      quizStartedAt: quizStartedAt || undefined,
+      submittedAtClient: submittedAtClient || undefined,
+      submittedAtServer: submittedAt,
     },
     metadata: {
       ip:
@@ -137,6 +209,10 @@ export default async (request: Request, context: any) => {
         undefined,
       userAgent: request.headers.get("user-agent") || undefined,
       source: cleanText(payload?.metadata?.source, 120) || "landing",
+      entryPlacement: entryPlacement || undefined,
+      campaignId: campaignId || undefined,
+      funnelStage: funnelStage || undefined,
+      attribution,
     },
   };
 

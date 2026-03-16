@@ -3,6 +3,8 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle } from 'lucide-react';
 import { submitLead } from '../utils/leadApi';
+import { trackEvent, EVENTS } from '../utils/analytics';
+import { captureAttribution } from '../utils/attribution';
 
 type FormState = {
   name: string;
@@ -28,8 +30,16 @@ const ClinicLeadForm: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [step, setStep] = useState(0);
   const [error, setError] = useState('');
+  const [hasStarted, setHasStarted] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    if (!hasStarted) {
+      setHasStarted(true);
+      trackEvent(EVENTS.FORM_STARTED, {
+        form_name: 'clinic_intake',
+      });
+    }
+
     setError('');
     setFormData({
       ...formData,
@@ -49,6 +59,8 @@ const ClinicLeadForm: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const attribution = captureAttribution();
+
     if (step < 2) {
       setStep(step + 1);
       return;
@@ -73,13 +85,25 @@ const ClinicLeadForm: React.FC = () => {
         },
         metadata: {
           source: 'clinic-page',
+          submittedAtClient: new Date().toISOString(),
+          funnelStage: 'clinic_intake',
+          campaignId: attribution?.utmCampaign,
+          attribution: attribution ?? undefined,
         },
+      });
+
+      trackEvent(EVENTS.LEAD_SUBMITTED, {
+        form_name: 'clinic_intake',
       });
       setStatus('success');
     } catch (submitError) {
       console.error('Clinic lead submit failed:', submitError);
       setStatus('idle');
       setError('Не вдалося відправити форму. Спробуйте ще раз.');
+
+      trackEvent(EVENTS.LEAD_SUBMISSION_FAILED, {
+        form_name: 'clinic_intake',
+      });
     }
   };
 

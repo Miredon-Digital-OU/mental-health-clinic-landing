@@ -90,6 +90,13 @@ const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
     trackEvent(EVENTS.RESULT_SHOWN, { result: result.title });
   }, [result.title]);
 
+  const handleContinue = () => {
+    trackEvent(EVENTS.RESULT_CONTINUE_CLICKED, {
+      result: result.title,
+    });
+    onContinue();
+  };
+
   return (
     <section className="section quiz-result">
       <div className="container">
@@ -112,7 +119,7 @@ const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
           <button
             type="button"
             className="btn btn--primary quiz-result__cta"
-            onClick={onContinue}
+            onClick={handleContinue}
           >
             Отримати персональний план
           </button>

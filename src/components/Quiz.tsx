@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, RotateCcw } from 'lucide-react';
 import { getVariant } from '../utils/abTesting';
-import { trackEvent, getQuestionEvent } from '../utils/analytics';
+import { trackEvent, getQuestionEvent, EVENTS } from '../utils/analytics';
 
 export type QuizAnswers = {
   pain: string;
@@ -35,6 +36,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>({});
   const [direction, setDirection] = useState(1);
   const [pricingVariant] = useState<'A' | 'B'>(() => getVariant('pricing_model'));
+  const isCompletedRef = useRef(false);
 
   const questions = useMemo(() => [
     {
@@ -101,9 +103,58 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
 
   const totalSteps = questions.length;
   const question = questions[currentStep];
+  const completionPercent = Math.round(((currentStep + 1) / totalSteps) * 100);
+
+  const latestProgressRef = useRef({
+    step: 1,
+    completionPercent: 0,
+    questionId: questions[0].id,
+  });
+
+  useEffect(() => {
+    latestProgressRef.current = {
+      step: currentStep + 1,
+      completionPercent,
+      questionId: question.id,
+    };
+  }, [completionPercent, currentStep, question.id]);
+
+  useEffect(() => {
+    const trackDropoff = () => {
+      if (isCompletedRef.current) {
+        return;
+      }
+
+      trackEvent(EVENTS.TEST_DROPOFF, {
+        step: latestProgressRef.current.step,
+        question_id: latestProgressRef.current.questionId,
+        completion_percent: latestProgressRef.current.completionPercent,
+      });
+    };
+
+    window.addEventListener('beforeunload', trackDropoff);
+
+    return () => {
+      window.removeEventListener('beforeunload', trackDropoff);
+      trackDropoff();
+    };
+  }, []);
 
   const handleSelect = (option: string) => {
-    trackEvent(getQuestionEvent(currentStep), { question: question.id, answer: option });
+    trackEvent(getQuestionEvent(currentStep), {
+      question_id: question.id,
+      question_number: currentStep + 1,
+      answer: option,
+      completion_percent: completionPercent,
+    });
+
+    trackEvent(EVENTS.QUESTION_ANSWERED, {
+      question_id: question.id,
+      question_number: currentStep + 1,
+      answer: option,
+      completion_percent: completionPercent,
+    });
+
     const newAnswers = { ...answers, [question.id]: option };
     setAnswers(newAnswers);
 
@@ -111,15 +162,47 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       setDirection(1);
       setCurrentStep(currentStep + 1);
     } else {
+      isCompletedRef.current = true;
+      trackEvent(EVENTS.TEST_COMPLETED, {
+        total_steps: totalSteps,
+      });
       onComplete(newAnswers as QuizAnswers);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
+      trackEvent(EVENTS.TEST_BACK_CLICKED, {
+        from_step: currentStep + 1,
+        to_step: currentStep,
+      });
       setDirection(-1);
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleRestart = () => {
+    trackEvent(EVENTS.TEST_RESTARTED, {
+      from_step: currentStep + 1,
+    });
+    setAnswers({});
+    setDirection(-1);
+    setCurrentStep(0);
+  };
+
+  const handleStepClick = (stepIndex: number) => {
+    if (stepIndex >= currentStep) {
+      return;
+    }
+
+    trackEvent(EVENTS.TEST_BACK_CLICKED, {
+      from_step: currentStep + 1,
+      to_step: stepIndex + 1,
+      via: 'progress_bar',
+    });
+
+    setDirection(-1);
+    setCurrentStep(stepIndex);
   };
 
   return (
@@ -127,12 +210,21 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       <div className="container">
         <div className="quiz__wrapper">
           <div className="quiz__progress">
-            {questions.map((_, i) => (
-              <div
-                key={i}
-                className={`quiz__progress-step ${i <= currentStep ? 'quiz__progress-step--active' : ''}`}
-              />
-            ))}
+            {questions.map((item, i) => {
+              const isPastStep = i < currentStep;
+              const isClickable = i <= currentStep;
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`quiz__progress-step ${i <= currentStep ? 'quiz__progress-step--active' : ''} ${isPastStep ? 'quiz__progress-step--clickable' : ''}`}
+                  onClick={() => handleStepClick(i)}
+                  disabled={!isClickable}
+                  aria-label={`Питання ${i + 1}`}
+                />
+              );
+            })}
           </div>
           <p className="quiz__counter">Питання {currentStep + 1} з {totalSteps}</p>
 
@@ -163,15 +255,27 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
             </motion.div>
           </AnimatePresence>
 
-          {currentStep > 0 && (
-            <button
-              type="button"
-              className="quiz__back"
-              onClick={handleBack}
-            >
-              Назад
-            </button>
-          )}
+          <div className="quiz__controls">
+            {currentStep > 0 && (
+              <button
+                type="button"
+                className="quiz__back"
+                onClick={handleBack}
+              >
+                <ChevronLeft size={16} aria-hidden="true" /> Назад
+              </button>
+            )}
+
+            {currentStep > 0 && (
+              <button
+                type="button"
+                className="quiz__restart"
+                onClick={handleRestart}
+              >
+                <RotateCcw size={14} aria-hidden="true" /> Почати спочатку
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </section>
