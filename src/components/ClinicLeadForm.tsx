@@ -163,10 +163,12 @@ const ClinicLeadForm: React.FC = () => {
                   value={formData.interest}
                   onChange={handleChange}
                 >
-                  <option value="psychology">Психолог</option>
-                  <option value="psychiatry">Психіатр</option>
-                  <option value="neurofeedback">Нейрофідбек / VR</option>
-                  <option value="genetics">Генетика</option>
+                  <option value="psychology">Психологія</option>
+                  <option value="psychiatry">Психіатрія</option>
+                  <option value="neurofeedback">Нейрофідбек</option>
+                  <option value="vr">VR-терапія</option>
+                  <option value="genetics">Генетичне тестування</option>
+                  <option value="complex">Комплексний пакет</option>
                   <option value="other">Не впевнений(а)</option>
                 </select>
               </div>
@@ -274,7 +276,7 @@ const ClinicLeadForm: React.FC = () => {
                 ? 'Відправка…'
                 : (
                   <span className="flex-center gap-2">
-                    Записатися <Send size={16} />
+                    Записатися на пілотну програму / отримати знижку <Send size={16} />
                   </span>
                 )}
             </button>

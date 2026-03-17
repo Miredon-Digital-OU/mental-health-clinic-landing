@@ -1,43 +1,95 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeInUp } from '../styles/animations';
+import { 
+  ShieldCheck, 
+  Activity, 
+  Users, 
+  Heart,
+  Eye,
+  Zap,
+  UserCheck
+} from 'lucide-react';
 
 const HowItWorks: React.FC = () => {
-    return (
-        <section id="how-it-works" className="section steps">
-            <div className="container">
-                <motion.div 
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={staggerContainer}
-                    className="text-center mb-5"
-                >
-                    <motion.h2 variants={fadeInUp} className="section__title">Як це працює?</motion.h2>
-                    <motion.p variants={fadeInUp} className="section__subtitle mb-4">
-                        Короткий маршрут у 3 кроки: оцінка, план, супровід
-                    </motion.p>
-                </motion.div>
+    const phases = [
+        {
+            number: 1,
+            title: 'Стабілізація та безпека',
+            icon: <ShieldCheck className="text-primary" />,
+            items: [
+                {
+                    label: 'Психотерапія',
+                    icon: <Heart size={20} />
+                },
+                {
+                    label: 'Навички саморегуляції',
+                    icon: <Zap size={20} />
+                }
+            ]
+        },
+        {
+            number: 2,
+            title: 'Фокусна робота з травмою',
+            icon: <Activity className="text-primary" />,
+            items: [
+                {
+                    label: 'Експозиційна терапія',
+                    icon: <Activity size={20} />
+                },
+                {
+                    label: 'EMDR',
+                    icon: <Eye size={20} />
+                }
+            ]
+        },
+        {
+            number: 3,
+            title: 'Підтримка та інтеграція',
+            icon: <UserCheck className="text-primary" />,
+            items: [
+                {
+                    label: 'Групова підтримка',
+                    icon: <Users size={20} />
+                }
+            ]
+        }
+    ];
 
-                <div className="steps__timeline">
-                    <div className="steps__line"></div>
-                    
-                    {[
-                        { num: '01', title: 'Швидкий скринінг', text: 'Визначаємо ваш стан та головний запит.' },
-                        { num: '02', title: 'Персональний план', text: 'Пояснюємо, який формат допомоги підійде саме вам.', highlight: true },
-                        { num: '03', title: 'Супровід і корекція', text: 'Відстежуємо прогрес і коригуємо маршрут за потреби.' }
-                    ].map((step, index) => (
+    return (
+        <section className="section bg-light" id="process">
+            <div className="container">
+                <div className="section__header text-center mb-5">
+                    <h2 className="section__title">Як працює наш метод</h2>
+                    <p className="section__subtitle mx-auto">
+                        Трьохрівнева система відновлення ментального здоров'я
+                    </p>
+                </div>
+
+                <div className="phases-grid mt-5">
+                    {phases.map((phase, idx) => (
                         <motion.div 
-                            key={index}
-                            className={`step-card ${step.highlight ? 'step-card--highlight' : ''}`}
-                            initial={{ opacity: 0, y: 50 }}
+                            key={idx}
+                            className="phase-column"
+                            initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: index * 0.2 }}
+                            transition={{ delay: idx * 0.2 }}
                         >
-                            <div className="step-card__number">{step.num}</div>
-                            <h3 className="step-card__title">{step.title}</h3>
-                            <p className="step-card__text">{step.text}</p>
+                            <div className="phase-card">
+                                <div className="phase-card__header">
+                                    <div className="phase-card__number">{phase.number}</div>
+                                    <h3 className="phase-card__title">{phase.title}</h3>
+                                </div>
+                                
+                                <div className="phase-card__items">
+                                    {phase.items.map((item, itemIdx) => (
+                                        <div key={itemIdx} className="phase-card__item">
+                                            <div className="phase-card__item-icon">{item.icon}</div>
+                                            <span className="phase-card__item-label">{item.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </motion.div>
                     ))}
                 </div>

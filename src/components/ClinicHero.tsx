@@ -21,12 +21,11 @@ const ClinicHero: React.FC = () => {
           </motion.div>
 
           <motion.h1 variants={fadeInUp} className="hero__title clinic-hero__title">
-            Доказова допомога для вашого ментального здоров&apos;я
+            Клініка психічного здоров&apos;я: від психолога до психіатра та інноваційних методів лікування
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="hero__subtitle">
-            Поєднуємо психотерапію, психіатрію та інноваційні методи (VR, нейрофідбек, генетика),
-            щоб підібрати індивідуальний, доказовий план підтримки.
+            Комплексний підхід: класична психологія, психіатрія, нейрофідбек, VR-терапія та оцінка генетичних ризиків.
           </motion.p>
 
           <motion.div variants={fadeInUp} className="hero__actions">
@@ -37,7 +36,7 @@ const ClinicHero: React.FC = () => {
           </motion.div>
 
           <motion.div variants={fadeInUp} className="hero__chips">
-<div className="tag">
+            <div className="tag">
               <ShieldCheck size={14} aria-hidden="true" />
               Конфіденційно • Етичні протоколи
             </div>
@@ -51,34 +50,25 @@ const ClinicHero: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="hero__visual"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
-        >
-          <div className="hero__visual-card">
-            <div className="abstract-shape"></div>
-            <div className="abstract-shape shape--2"></div>
-            <ul className="hero__visual-grid clinic-hero__list">
-              <li className="clinic-hero__list-item">
-                <p className="visual-label">Індивідуальна діагностика</p>
-                <p className="text-muted">Скринінг, оцінка стану, план підтримки.</p>
-              </li>
-              <li className="clinic-hero__list-item">
-                <p className="visual-label">Технологічні методи</p>
-                <p className="text-muted">VR, нейрофідбек, генетичні тести.</p>
-              </li>
-              <li className="clinic-hero__list-item">
-                <p className="visual-label">Супровід</p>
-                <p className="text-muted">Регулярна перевірка прогресу.</p>
-              </li>
-              <li className="clinic-hero__list-item">
-                <p className="visual-label">Команда</p>
-                <p className="text-muted">Психологи, психіатри, нейрофахівці.</p>
-              </li>
-            </ul>
-          </div>
-        </motion.div>
+           className="hero__visual"
+           initial={{ opacity: 0, scale: 0.95 }}
+           animate={{ opacity: 1, scale: 1 }}
+           transition={{ duration: 1, delay: 0.2 }}
+         >
+           <div className="hero__visual-img-container">
+             <img 
+               src="/brain/75861c7c-bc7c-4be7-81bb-625833e9cbfd/clinic_hero_visual_1773751109558.png" 
+               alt="Сучасна клініка психічного здоров'я" 
+               className="hero__visual-img"
+             />
+             <div className="hero__visual-overlay">
+               <div className="glass-effect p-4 text-sm">
+                 <p className="font-bold text-primary mb-1">98% точність діагностики</p>
+                 <p className="text-xs text-muted">Завдяки поєднанню ЕЕГ та клінічного інтерв’ю</p>
+               </div>
+             </div>
+           </div>
+         </motion.div>
       </div>
     </section>
   );

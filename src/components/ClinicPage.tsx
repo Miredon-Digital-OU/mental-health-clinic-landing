@@ -5,6 +5,7 @@ import PainPoints from './PainPoints';
 import Solution from './Solution';
 import HowItWorks from './HowItWorks';
 import Services from './Services';
+import Pricing from './Pricing';
 import Benefits from './Benefits';
 import Testimonials from './Testimonials';
 import ClinicLeadForm from './ClinicLeadForm';
@@ -27,6 +28,7 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ onBackToStart }) => {
         <Solution />
         <HowItWorks />
         <Services />
+        <Pricing />
         <Benefits />
         <Testimonials />
         <ClinicLeadForm />

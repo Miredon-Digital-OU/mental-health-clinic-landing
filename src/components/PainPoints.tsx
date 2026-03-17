@@ -1,24 +1,43 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '../styles/animations';
 
 const PainPoints: React.FC = () => {
+    const points = [
+        "«Важко сказати, чи це просто стрес, чи вже хвороба».",
+        "«Я відвідую психолога, але чи потрібен мені психіатр, поки що не зрозуміло».",
+        "«Я шукаю щось більше, ніж просто розмови: не можу не перевірити свій мозок, генетику, реакцію на стрес»."
+    ];
+
     return (
         <section id="problems" className="section problems">
             <div className="container">
-                <h2 className="section__title text-center">Важко сказати, чи це просто стрес,<br />чи вже потрібна допомога?</h2>
-                <p className="section__subtitle text-center">Ви не самі. Ми допомагаємо зрозуміти, що саме відбувається та що з цим робити.</p>
+                <motion.div 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    variants={staggerContainer}
+                    className="text-center mb-5"
+                >
+                    <motion.h2 variants={fadeInUp} className="section__title">Проблеми та болі</motion.h2>
+                    <motion.p variants={fadeInUp} className="section__subtitle">
+                        Ми розуміємо, через що ви проходите. Наші пацієнти часто діляться цими думками:
+                    </motion.p>
+                </motion.div>
+
                 <div className="grid grid--3">
-                    <div className="card card--problem">
-                        <p><strong>Тривожність</strong><br />Постійне внутрішнє напруження, навіть коли зовні все наче нормально.</p>
-                    </div>
-                    <div className="card card--problem">
-                        <p><strong>Вигорання</strong><br />Виснаження, втрата ресурсу і відчуття, що відпочинок більше не відновлює.</p>
-                    </div>
-                    <div className="card card--problem">
-                        <p><strong>Напруження в тілі та сні</strong><br />Складно заснути, важко розслабитися, нервова система постійно "на сторожі".</p>
-                    </div>
-                    <div className="card card--problem">
-                        <p><strong>ПТСР після травматичних подій</strong><br />Флешбеки, різкі реакції на тригери, відчуття небезпеки навіть у безпечних умовах.</p>
-                    </div>
+                    {points.map((text, index) => (
+                        <motion.div 
+                            key={index}
+                            className="card card--problem"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
+                        >
+                            <p className="pain-quote">{text}</p>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>
