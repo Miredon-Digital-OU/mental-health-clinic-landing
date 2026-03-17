@@ -35,7 +35,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
   anxiety: {
     image: 'https://images.unsplash.com/photo-1594718200327-17b749e753e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Тривожність',
-    description: 'Постійне напруження та занепокоєння',
+    description: 'Постійне напруження, тривожні думки, страх без причини. Ми допоможемо повернути відчуття безпеки і спокою.',
     showcase: {
       eyebrow: 'Персональний маршрут при тривожності',
       title: 'Від напруження до стабільності: чіткий план у 3 етапи',
@@ -64,7 +64,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
   depression: {
     image: 'https://images.unsplash.com/photo-1607688387751-c1e95ae09a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Депресія',
-    description: 'Апатія, втома, втрата інтересу',
+    description: 'Спустошеність, втрата радості, важкість у кожному дні. Разом знайдемо вихід і повернемо сенс.',
     showcase: {
       eyebrow: 'Персональний маршрут при депресії',
       title: 'Повертаємо енергію та інтерес до життя поетапно',
@@ -93,7 +93,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
   burnout: {
     image: 'https://images.unsplash.com/photo-1636191284490-fff58f369ec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Вигорання',
-    description: 'Емоційне та фізичне виснаження',
+    description: 'Коли більше нема сил — ні на роботу, ні на себе. Відновимо ресурс і допоможемо знайти баланс.',
     showcase: {
       eyebrow: 'Персональний маршрут при вигоранні',
       title: 'Повертаємо ресурс і працездатність без перевантаження',
@@ -122,7 +122,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
   ptsd: {
     image: 'https://images.unsplash.com/photo-1650296390057-06aab57bc288?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'ПТСР',
-    description: 'Наслідки травматичних подій',
+    description: 'Травматичний досвід, що не відпускає. Безпечна робота з пам\'яттю та нервовою системою.',
     showcase: {
       eyebrow: 'Персональний маршрут при ПТСР',
       title: 'Відновлюємо відчуття безпеки і контроль над реакціями',
@@ -151,7 +151,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
   relationships: {
     image: 'https://images.unsplash.com/photo-1520440135183-d907c129b3e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     case: 'Стосунки',
-    description: 'Труднощі в комунікації',
+    description: 'Конфлікти, відстань, нерозуміння. Допомагаємо парам і людям відновити зв\'язок із близькими.',
     showcase: {
       eyebrow: 'Персональний маршрут для стосунків',
       title: 'Налагоджуємо діалог, межі та взаємну підтримку',
