@@ -25,3 +25,12 @@ dist-ssr
 
 # Local Netlify folder
 .netlify
+
+# Agent skills (Cursor/Claude)
+.agents/
+.claude/
+skills-lock.json
+
+# Local docs (do not commit)
+initial_docs_do_not_commit/
+nul

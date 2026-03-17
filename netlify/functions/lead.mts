@@ -9,7 +9,9 @@ const ALLOWED_INTERESTS = new Set([
   "psychology",
   "psychiatry",
   "neurofeedback",
+  "vr",
   "genetics",
+  "complex",
   "other",
 ]);
 const ALLOWED_FAMILY_HISTORY = new Set(["no", "yes", "unknown"]);

@@ -4,6 +4,12 @@ import { ArrowRight } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '../styles/animations';
 import { getVariant } from '../utils/abTesting';
 
+import anxietyImg from '../assets/1_2026-03-17_15-28-27.png';
+import depressionImg from '../assets/2_2026-03-17_15-28-13.png';
+import burnoutImg from '../assets/3_2026-03-17_15-28-01.png';
+import ptsdImg from '../assets/5_1_2026-03-17_15-34-27.png';
+import relationshipsImg from '../assets/5_2026-03-17_15-27-36.png';
+
 type HeroProps = {
   onStartQuiz: (placement: 'hero' | 'mid' | 'lower') => void;
 };
@@ -33,7 +39,7 @@ const heroTopicOrder: TopicKey[] = ['anxiety', 'depression', 'burnout', 'ptsd', 
 
 const heroTopics: Record<TopicKey, TopicData> = {
   anxiety: {
-    image: 'https://images.unsplash.com/photo-1594718200327-17b749e753e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    image: anxietyImg,
     case: 'Тривожність',
     description: 'Постійне напруження, тривожні думки, страх без причини. Ми допоможемо повернути відчуття безпеки і спокою.',
     showcase: {
@@ -62,7 +68,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   depression: {
-    image: 'https://images.unsplash.com/photo-1607688387751-c1e95ae09a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    image: depressionImg,
     case: 'Депресія',
     description: 'Спустошеність, втрата радості, важкість у кожному дні. Разом знайдемо вихід і повернемо сенс.',
     showcase: {
@@ -91,7 +97,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   burnout: {
-    image: 'https://images.unsplash.com/photo-1636191284490-fff58f369ec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    image: burnoutImg,
     case: 'Вигорання',
     description: 'Коли більше нема сил — ні на роботу, ні на себе. Відновимо ресурс і допоможемо знайти баланс.',
     showcase: {
@@ -120,7 +126,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   ptsd: {
-    image: 'https://images.unsplash.com/photo-1650296390057-06aab57bc288?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    image: ptsdImg,
     case: 'ПТСР',
     description: 'Травматичний досвід, що не відпускає. Безпечна робота з пам\'яттю та нервовою системою.',
     showcase: {
@@ -149,7 +155,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     },
   },
   relationships: {
-    image: 'https://images.unsplash.com/photo-1520440135183-d907c129b3e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    image: relationshipsImg,
     case: 'Стосунки',
     description: 'Конфлікти, відстань, нерозуміння. Допомагаємо парам і людям відновити зв\'язок із близькими.',
     showcase: {

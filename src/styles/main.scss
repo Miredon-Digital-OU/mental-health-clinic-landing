@@ -2362,14 +2362,14 @@ body {
   position: relative;
   background: $color-bg-dark;
   border-radius: 1.5rem;
-  padding: 1rem;
-  min-height: 360px;
+  padding: 1.5rem;
+  min-height: 420px;
 }
 
 .hero-showcase__badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 1.25rem;
+  left: 1.25rem;
   z-index: 2;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.28);
@@ -2384,8 +2384,9 @@ body {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
   height: 100%;
-  align-items: end;
-  padding-top: 2.1rem;
+  align-items: stretch;
+  padding-top: 3.5rem;
+  min-height: 400px;
 
   @include tablet {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2394,6 +2395,7 @@ body {
   @include mobile {
     grid-template-columns: 1fr;
     gap: 0.6rem;
+    min-height: 0;
   }
 }
 
@@ -2403,10 +2405,14 @@ body {
   background: $color-white;
   border: 1px solid rgba(10, 14, 20, 0.08);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   img {
     width: 100%;
-    aspect-ratio: 0.88 / 1;
+    height: 200px;
+    flex-shrink: 0;
     object-fit: cover;
     border-radius: 1rem 1rem 0 0;
   }
@@ -2415,6 +2421,7 @@ body {
     color: $color-text;
     font-size: 0.82rem;
     padding: 0.7rem;
+    flex-shrink: 0;
   }
 }
 
@@ -2423,6 +2430,9 @@ body {
   gap: 0.4rem;
   padding: 0 0.7rem 0.7rem;
   flex-wrap: wrap;
+  flex: 1;
+  min-height: 2.5rem;
+  align-content: flex-start;
 }
 
 .service-tag {
@@ -2548,7 +2558,7 @@ body {
   }
 
   .hero-showcase__visual {
-    min-height: 320px;
+    min-height: 380px;
   }
 }
 
@@ -2627,13 +2637,18 @@ body {
     padding: 1.1rem;
   }
 
+  .hero-showcase__visual {
+    padding: 1.25rem;
+  }
+
   .hero-showcase__cards {
     grid-template-columns: 1fr;
     gap: 0.6rem;
+    padding-top: 3rem;
   }
 
   .hero-showcase__card img {
-    aspect-ratio: 1.3 / 1;
+    height: 180px;
   }
 }
 
