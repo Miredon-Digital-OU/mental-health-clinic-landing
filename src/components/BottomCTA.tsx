@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 const BottomCTA: React.FC = () => {
   return (
-    <section className="bottom-cta">
+    <section className="bottom-cta" data-theme="dark">
       <div className="container bottom-cta__inner">
         <div>
           <h2>Залишилися питання?</h2>

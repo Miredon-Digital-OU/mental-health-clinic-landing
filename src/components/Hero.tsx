@@ -386,6 +386,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
             {/* ── Mobile full-screen card stack — hidden on desktop ── */}
             <div
               className="hero-showcase__mobile-stack"
+              data-theme="dark"
               ref={mobileStackRef}
               onTouchStart={handleCardTouchStart}
               onTouchEnd={handleCardTouchEnd}
