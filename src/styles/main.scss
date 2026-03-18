@@ -2386,10 +2386,6 @@ body {
 .hero__gallery-strip-wrap {
   position: relative;
   margin-top: 1.4rem;
-
-  @include mobile {
-    overflow: hidden;
-  }
 }
 
 .hero__tabs-hint-edge {
@@ -2400,23 +2396,23 @@ body {
     position: absolute;
     right: 0;
     top: 0;
-    bottom: 0.4rem;
-    width: 44px;
-    background: linear-gradient(to right, transparent, rgba(236, 239, 239, 0.9) 60%);
+    bottom: 0;
+    width: 52px;
+    background: linear-gradient(to right, transparent, rgba(236, 239, 239, 0.92) 55%);
     align-items: center;
     justify-content: flex-end;
-    padding-right: 4px;
-    color: $color-text-muted;
+    padding-right: 6px;
+    color: $color-text;
     pointer-events: none;
-    animation: tabs-hint-fade 2s ease-in-out forwards;
+    z-index: 10;
+    // Persistent pulse so it stays visible until user scrolls
+    animation: tabs-hint-pulse 2s ease-in-out infinite;
   }
 }
 
-@keyframes tabs-hint-fade {
-  0%   { opacity: 0; }
-  25%  { opacity: 1; }
-  75%  { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes tabs-hint-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }
 
 .hero__gallery-strip {
@@ -2687,13 +2683,14 @@ body {
 }
 
 .hero-showcase__mobile-card {
+  position: relative; // anchor for the swipe hint
   width: 100vw;
   flex-shrink: 0;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   height: 86dvh;
-  overflow: hidden;
+  // No overflow:hidden here — the photo has its own rounded corners
 }
 
 .hero-showcase__mobile-card__photo {
@@ -2792,38 +2789,34 @@ body {
   }
 }
 
-.hero-showcase__mobile-hint {
-  position: absolute;
-  bottom: 2.2rem;
-  right: 1.25rem;
-  z-index: 3;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.3rem;
-  color: rgba(16, 18, 24, 0.35);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  animation: hint-bob 2s ease-in-out infinite;
+// Circular swipe-right hint rendered inside the first stage card
+.hero-showcase__swipe-hint {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    color: $color-text;
+    z-index: 10;
+    pointer-events: none;
+    animation: swipeHintX 1.5s ease-in-out 2 forwards;
+  }
 }
 
-@keyframes hint-bob {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(5px); }
-}
-
-// Pulse modifier: 2 pulses then fades out (used for cards swipe hint)
-.hero-showcase__mobile-hint--pulse {
-  animation: cards-hint-pulse 1.4s ease-in-out 2 forwards;
-}
-
-@keyframes cards-hint-pulse {
-  0%   { opacity: 0; transform: translateX(0); }
-  20%  { opacity: 1; }
-  60%  { transform: translateX(6px); opacity: 1; }
-  80%  { transform: translateX(0); opacity: 1; }
-  100% { opacity: 0; }
+@keyframes swipeHintX {
+  0%   { transform: translateY(-50%) translateX(0);    opacity: 0.9; }
+  40%  { transform: translateY(-50%) translateX(10px); opacity: 1;   }
+  80%  { transform: translateY(-50%) translateX(0);    opacity: 0.9; }
+  100% { transform: translateY(-50%) translateX(0);    opacity: 0;   }
 }
 
 // Hero section scroll-down hint (bounces 3x then CSS auto-fades via JS dismiss)

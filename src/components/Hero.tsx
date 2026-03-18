@@ -244,24 +244,32 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     if (!sessionStorage.getItem('opora_hint_hero')) setShowHeroHint(true);
   }, []);
 
-  // Tabs: peek-scroll 30px right then back
+  // Tabs: peek-scroll 30px right then back + dismiss on first scroll
   useEffect(() => {
     if (!showTabsHint) return;
     const el = galleryStripRef.current;
     if (!el) return;
+
+    const dismiss = () => {
+      setShowTabsHint(false);
+      sessionStorage.setItem('opora_hint_tabs', '1');
+    };
+    // Dismiss immediately when user scrolls themselves
+    el.addEventListener('scroll', dismiss, { once: true });
+
     let t2: ReturnType<typeof setTimeout>;
     let t3: ReturnType<typeof setTimeout>;
     const t1 = setTimeout(() => {
       el.scrollTo({ left: 30, behavior: 'smooth' });
       t2 = setTimeout(() => {
         el.scrollTo({ left: 0, behavior: 'smooth' });
-        t3 = setTimeout(() => {
-          setShowTabsHint(false);
-          sessionStorage.setItem('opora_hint_tabs', '1');
-        }, 800);
+        t3 = setTimeout(dismiss, 800);
       }, 600);
     }, 1600);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    return () => {
+      el.removeEventListener('scroll', dismiss);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+    };
   }, [showTabsHint]);
 
   // Cards hint: auto-dismiss after 3.5s
@@ -475,6 +483,12 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                         {stageDescriptions[cardIdx]}
                       </p>
                     </div>
+                    {/* Swipe hint — only on first card, circle arrow */}
+                    {cardIdx === 0 && showCardsHint && (
+                      <div className="hero-showcase__swipe-hint" aria-hidden="true">
+                        <ChevronRight size={18} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -492,13 +506,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                 ))}
               </div>
 
-              {/* Swipe hint — pulses 2x then auto-dismisses via sessionStorage */}
-              {showCardsHint && (
-                <div className="hero-showcase__mobile-hint hero-showcase__mobile-hint--pulse">
-                  <ArrowRight size={16} />
-                  <span>свайп вправо</span>
-                </div>
-              )}
             </div>
           </div>
         </motion.div>
