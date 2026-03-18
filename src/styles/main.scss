@@ -321,6 +321,11 @@ img {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   padding: 0.85rem 0;
 
+  @include mobile {
+    position: static; // scrolls away with the page on mobile
+    backdrop-filter: none;
+  }
+
   &__container {
     display: flex;
     justify-content: center;
@@ -2674,6 +2679,7 @@ body {
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x; // prevent vertical jitter — only allow horizontal panning
   scrollbar-width: none;
   width: 100%;
 
@@ -2714,7 +2720,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  overflow-y: auto;
+  overflow: hidden; // no independent scroll — prevents vertical jitter
 }
 
 .hero-showcase__mobile-card__badge {

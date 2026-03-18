@@ -203,20 +203,20 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  // One-time swipe hints (guarded by sessionStorage)
-  const [showTabsHint, setShowTabsHint] = useState(false);
-  const [showCardsHint, setShowCardsHint] = useState(false);
-  const [showHeroHint, setShowHeroHint] = useState(false);
+  // One-time swipe hints (guarded by sessionStorage, mobile-only)
+  const isMobileCheck = () =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+  const [showTabsHint, setShowTabsHint] = useState(
+    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_tabs'),
+  );
+  const [showCardsHint, setShowCardsHint] = useState(
+    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_cards'),
+  );
+  const [showHeroHint, setShowHeroHint] = useState(
+    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_hero'),
+  );
 
   const selectedTopic = heroTopics[selectedTopicId];
-
-  // Reset active card and scroll position when topic changes
-  useEffect(() => {
-    setActiveCardIndex(0);
-    if (mobileStackRef.current) {
-      mobileStackRef.current.scrollLeft = 0;
-    }
-  }, [selectedTopicId]);
 
   const handleMobileScroll = () => {
     const el = mobileStackRef.current;
@@ -235,14 +235,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     if (!el) return;
     el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
   };
-
-  // Init hints on mount — mobile only, once per session
-  useEffect(() => {
-    if (!window.matchMedia('(max-width: 768px)').matches) return;
-    if (!sessionStorage.getItem('opora_hint_tabs')) setShowTabsHint(true);
-    if (!sessionStorage.getItem('opora_hint_cards')) setShowCardsHint(true);
-    if (!sessionStorage.getItem('opora_hint_hero')) setShowHeroHint(true);
-  }, []);
 
   // Tabs: peek-scroll 30px right then back + dismiss on first scroll
   useEffect(() => {
@@ -294,6 +286,10 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
 
   const handleSelectTopic = (topicId: TopicKey) => {
     setSelectedTopicId(topicId);
+    setActiveCardIndex(0);
+    if (mobileStackRef.current) {
+      mobileStackRef.current.scrollLeft = 0;
+    }
     if (window.matchMedia('(max-width: 768px)').matches) {
       setTimeout(() => {
         showcaseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -471,7 +467,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                         {selectedTopic.showcase.badge}
                       </span>
                       <span className="hero-showcase__mobile-card__num">
-                        0{cardIdx + 1}
+                        {String(cardIdx + 1).padStart(2, '0')}
                       </span>
                       <h3 className="hero-showcase__mobile-card__title">{card.title}</h3>
                       <div className="hero-showcase__mobile-card__services">
