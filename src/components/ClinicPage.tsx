@@ -22,7 +22,7 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ onBackToStart }) => {
   return (
     <div className="app">
       <ClinicHeader onBackToStart={onBackToStart} />
-      <main>
+      <main id="main-content">
         <ClinicHero />
         <PainPoints />
         <Solution />

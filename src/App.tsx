@@ -105,7 +105,7 @@ function App() {
   return (
     <div className="app">
       <Header showLinks={showHeaderLinks} />
-      <main>
+      <main id="main-content">
         {stage === 'hero' && <Hero onStartQuiz={handleStartQuiz} />}
 
         <div ref={mainRef}>

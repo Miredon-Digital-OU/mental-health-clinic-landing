@@ -5,8 +5,7 @@
 [functions]
   directory = "netlify/functions"
 
-# Optional: If you eventually add React Router, uncomment the lines below
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

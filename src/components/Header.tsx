@@ -10,6 +10,9 @@ const Header: React.FC<HeaderProps> = ({ showLinks = true }) => {
 
   return (
     <header className="header">
+      <a href="#main-content" className="skip-link">
+        Перейти до основного контенту
+      </a>
       <div className="container">
         <div className="header__shell">
           <div className={showLinks ? 'header__container header__container--spread' : 'header__container'}>

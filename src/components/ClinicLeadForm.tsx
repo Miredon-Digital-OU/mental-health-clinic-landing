@@ -99,7 +99,11 @@ const ClinicLeadForm: React.FC = () => {
     } catch (submitError) {
       console.error('Clinic lead submit failed:', submitError);
       setStatus('idle');
-      setError('Не вдалося відправити форму. Спробуйте ще раз.');
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : 'Не вдалося відправити форму. Спробуйте ще раз.'
+      );
 
       trackEvent(EVENTS.LEAD_SUBMISSION_FAILED, {
         form_name: 'clinic_intake',

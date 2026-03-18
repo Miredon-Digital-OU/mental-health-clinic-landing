@@ -96,7 +96,11 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitted, answers, entryPlacemen
     } catch (submitError) {
       console.error('Lead submit failed:', submitError);
       setStatus('idle');
-      setError('Не вдалося відправити форму. Спробуйте ще раз.');
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : 'Не вдалося відправити форму. Спробуйте ще раз.'
+      );
 
       trackEvent(EVENTS.LEAD_SUBMISSION_FAILED, {
         form_name: 'lead_capture',

@@ -2,6 +2,8 @@
 
 This project is now instrumented to send GA4 events from the frontend.
 
+For production deployment, environment variables, and Netlify setup, see [DEPLOY.md](./DEPLOY.md).
+
 ## 1) Create/select a Google Cloud project
 
 ```bash
