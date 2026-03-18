@@ -428,13 +428,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                       <p className="hero-showcase__mobile-card__desc">
                         {stageDescriptions[cardIdx]}
                       </p>
-                      <button
-                        type="button"
-                        className="btn btn--primary btn--sm hero-showcase__mobile-card__cta"
-                        onClick={() => onStartQuiz('mid')}
-                      >
-                        Пройти тест за 60 секунд
-                      </button>
                     </div>
                   </div>
                 );

@@ -2618,7 +2618,7 @@ body {
   position: relative;
   z-index: 2;
   margin-top: auto;
-  padding: 1.5rem 1.25rem 5.5rem; // bottom space for dots + hint
+  padding: 1.5rem 1.25rem 4.5rem; // bottom space for dots + hint
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -2666,19 +2666,6 @@ body {
   color: rgba(255, 255, 255, 0.78);
   line-height: 1.55;
   margin: 0;
-}
-
-.hero-showcase__mobile-card__cta {
-  margin-top: 0.5rem;
-  align-self: flex-start;
-  width: auto !important;
-  background: $color-white !important;
-  color: $color-text !important;
-  border-color: $color-white !important;
-
-  &:hover {
-    background: $color-bg !important;
-  }
 }
 
 .hero-showcase__mobile-dots {
