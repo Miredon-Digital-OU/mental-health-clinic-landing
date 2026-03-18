@@ -72,7 +72,7 @@ const HowItWorks: React.FC = () => {
                         <div
                             key={idx}
                             className="phase-column"
-                            data-reveal
+                            data-reveal="card"
                             data-reveal-delay={String(idx * 120)}
                         >
                             <div className="phase-card">

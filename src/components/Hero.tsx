@@ -325,8 +325,14 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           <div className="hero-showcase__visual">
             <span className="hero-showcase__badge">{selectedTopic.showcase.badge}</span>
             <div className="hero-showcase__cards">
-              {selectedTopic.showcase.cards.map((card) => (
-                <motion.article key={card.title} className="hero-showcase__card">
+              {selectedTopic.showcase.cards.map((card, cardIdx) => (
+                <motion.article
+                  key={`${selectedTopicId}-${card.title}`}
+                  className="hero-showcase__card"
+                  initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: cardIdx * 0.1 }}
+                >
                   <img src={card.image} alt={card.title} width={280} height={200} loading="lazy" />
                   <p>{card.title}</p>
                   <div className="hero-showcase__card-services">

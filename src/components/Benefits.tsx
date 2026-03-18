@@ -37,7 +37,7 @@ const Benefits: React.FC = () => {
             <div
               key={item.title}
               className="card benefit-card"
-              data-reveal
+              data-reveal="card"
               data-reveal-delay={String(index * 100)}
             >
               <div className="tag">{item.icon} {item.title}</div>

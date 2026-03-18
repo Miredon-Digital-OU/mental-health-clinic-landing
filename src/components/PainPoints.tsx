@@ -24,7 +24,7 @@ const PainPoints: React.FC = () => {
                         <div
                             key={index}
                             className="card card--problem"
-                            data-reveal
+                            data-reveal="card"
                             data-reveal-delay={String(index * 100)}
                         >
                             <p className="pain-quote">{text}</p>

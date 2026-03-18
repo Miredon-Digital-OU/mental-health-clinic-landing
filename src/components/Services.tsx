@@ -84,7 +84,7 @@ const Services: React.FC = () => {
               <article
                 key={card.id}
                 className={`service-expand-card ${isExpanded ? 'service-expand-card--open' : ''}`}
-                data-reveal
+                data-reveal="card"
                 data-reveal-delay={String(index * 100)}
               >
                 <button
