@@ -2434,8 +2434,8 @@ body {
   }
 
   @include mobile {
-    flex: 0 0 148px;
-    width: 148px;
+    flex: 0 0 168px;
+    width: 168px;
     scroll-snap-align: start;
   }
 }
@@ -2466,6 +2466,10 @@ body {
   font-weight: 700;
   font-size: 0.95rem;
   margin-bottom: 0.2rem;
+
+  @include mobile {
+    font-size: 1.05rem;
+  }
 }
 
 .hero-gallery-item__desc {
