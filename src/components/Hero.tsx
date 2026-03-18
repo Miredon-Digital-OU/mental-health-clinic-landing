@@ -189,6 +189,8 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [variant] = useState<'A' | 'B'>(() => getVariant('hero_title'));
   const [selectedTopicId, setSelectedTopicId] = useState<TopicKey>('anxiety');
   const showcaseRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
 
   const selectedTopic = heroTopics[selectedTopicId];
 
@@ -200,6 +202,29 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
         showcaseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 120);
     }
+  };
+
+  const navigateTopic = (direction: 1 | -1) => {
+    const currentIndex = heroTopicOrder.indexOf(selectedTopicId);
+    const nextIndex = (currentIndex + direction + heroTopicOrder.length) % heroTopicOrder.length;
+    handleSelectTopic(heroTopicOrder[nextIndex]);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    // Only trigger if horizontal swipe is dominant and far enough
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navigateTopic(dx < 0 ? 1 : -1);
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   return (
@@ -281,6 +306,8 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7 }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <div className="hero-showcase__copy">
             <p className="hero-showcase__eyebrow">{selectedTopic.showcase.eyebrow}</p>
