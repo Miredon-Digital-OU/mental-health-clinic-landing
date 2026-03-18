@@ -2338,11 +2338,16 @@ body {
   }
 
   @include mobile {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 0.65rem;
+    padding-bottom: 0.4rem;
 
-    .hero-gallery-item:nth-child(5) {
-      display: none;
-    }
+    // Hide scrollbar visually but keep it functional
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
   }
 
   img {
@@ -2370,6 +2375,12 @@ body {
     aspect-ratio: 1.2 / 1;
     object-fit: cover;
     border-radius: 1.2rem;
+  }
+
+  @include mobile {
+    flex: 0 0 148px;
+    width: 148px;
+    scroll-snap-align: start;
   }
 }
 
@@ -2407,7 +2418,11 @@ body {
   line-height: 1.3;
 
   @include mobile {
-    display: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.7rem;
   }
 }
 
@@ -2546,6 +2561,173 @@ body {
   font-weight: 600;
   padding: 0.25rem 0.5rem;
   border-radius: 0.3rem;
+
+  &--light {
+    background: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+}
+
+// ── Mobile full-screen showcase card stack ──────────────────────────────
+.hero-showcase__mobile-stack {
+  display: none; // desktop: hidden — shown via @include mobile below
+
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  border-radius: 1.4rem;
+}
+
+.hero-showcase__mobile-card {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.42s ease;
+  will-change: transform, opacity;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-showcase__mobile-card__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1.4rem;
+  }
+}
+
+.hero-showcase__mobile-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(10, 14, 20, 0.92) 0%,
+    rgba(10, 14, 20, 0.55) 50%,
+    rgba(10, 14, 20, 0.2) 100%
+  );
+  border-radius: 1.4rem;
+}
+
+.hero-showcase__mobile-card__content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding: 1.5rem 1.25rem 5.5rem; // bottom space for dots + hint
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.hero-showcase__mobile-card__badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: $radius-full;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.28rem 0.75rem;
+  width: fit-content;
+  letter-spacing: 0.04em;
+}
+
+.hero-showcase__mobile-card__num {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.15);
+  font-family: $font-heading;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.hero-showcase__mobile-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  line-height: 1.2;
+  font-family: $font-heading;
+  margin: 0;
+}
+
+.hero-showcase__mobile-card__services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.hero-showcase__mobile-card__desc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.hero-showcase__mobile-card__cta {
+  margin-top: 0.5rem;
+  align-self: flex-start;
+  width: auto !important;
+  background: $color-white !important;
+  color: $color-text !important;
+  border-color: $color-white !important;
+
+  &:hover {
+    background: $color-bg !important;
+  }
+}
+
+.hero-showcase__mobile-dots {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.hero-showcase__mobile-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, width 0.2s;
+
+  &--active {
+    background: $color-white;
+    width: 20px;
+    border-radius: 3px;
+  }
+}
+
+.hero-showcase__mobile-hint {
+  position: absolute;
+  bottom: 3.5rem;
+  right: 1.25rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  animation: hint-bob 2s ease-in-out infinite;
+}
+
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 .quiz__wrapper,
@@ -2841,30 +3023,38 @@ body {
   }
 
   .hero__gallery-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-
-    .hero-gallery-item:nth-child(5) {
-      display: none;
-    }
+    // horizontal scroll layout handled in component styles
   }
 
+  // Showcase: strip all chrome — the mobile card stack is self-contained
   .hero-showcase {
-    border-radius: 1.5rem;
-    padding: 1.1rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+    margin-top: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  // Hide desktop-only elements
+  .hero-showcase__copy,
+  .hero-showcase__badge,
+  .hero-showcase__cards {
+    display: none;
   }
 
   .hero-showcase__visual {
-    padding: 1.25rem;
+    padding: 0;
+    background: transparent;
+    min-height: 0;
+    border-radius: 1.4rem;
+    overflow: hidden;
   }
 
-  .hero-showcase__cards {
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-    padding-top: 3rem;
-  }
-
-  .hero-showcase__card img {
-    height: 180px;
+  // Show the mobile card stack
+  .hero-showcase__mobile-stack {
+    display: block;
   }
 }
 
