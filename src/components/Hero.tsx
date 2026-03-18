@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronUp } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '../styles/animations';
 import { getVariant } from '../utils/abTesting';
 
@@ -198,30 +198,32 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const showcaseRef = useRef<HTMLDivElement>(null);
   const mobileStackRef = useRef<HTMLDivElement>(null);
-  const cardTouchStartY = useRef<number | null>(null);
   // horizontal swipe on the showcase (topic navigation)
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
   const selectedTopic = heroTopics[selectedTopicId];
 
-  // Reset active card when topic changes
+  // Reset active card and scroll position when topic changes
   useEffect(() => {
     setActiveCardIndex(0);
+    if (mobileStackRef.current) {
+      mobileStackRef.current.scrollLeft = 0;
+    }
   }, [selectedTopicId]);
 
-  // Non-passive touchmove on mobile card stack to prevent page scroll
-  useEffect(() => {
+  const handleMobileScroll = () => {
     const el = mobileStackRef.current;
     if (!el) return;
-    const onTouchMove = (e: TouchEvent) => {
-      if (cardTouchStartY.current !== null) {
-        e.preventDefault();
-      }
-    };
-    el.addEventListener('touchmove', onTouchMove, { passive: false });
-    return () => el.removeEventListener('touchmove', onTouchMove);
-  }, []);
+    const index = Math.round(el.scrollLeft / el.offsetWidth);
+    setActiveCardIndex(index);
+  };
+
+  const handleDotClick = (i: number) => {
+    const el = mobileStackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
+  };
 
   const handleSelectTopic = (topicId: TopicKey) => {
     setSelectedTopicId(topicId);
@@ -248,24 +250,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     }
     touchStartX.current = null;
     touchStartY.current = null;
-  };
-
-  // Vertical swipe on the mobile card stack → stage navigation
-  const handleCardTouchStart = (e: React.TouchEvent) => {
-    cardTouchStartY.current = e.touches[0].clientY;
-  };
-  const handleCardTouchEnd = (e: React.TouchEvent) => {
-    if (cardTouchStartY.current === null) return;
-    const dy = e.changedTouches[0].clientY - cardTouchStartY.current;
-    const totalCards = selectedTopic.showcase.cards.length;
-    if (Math.abs(dy) > 48) {
-      if (dy < 0 && activeCardIndex < totalCards - 1) {
-        setActiveCardIndex((i) => i + 1); // swipe up → next stage
-      } else if (dy > 0 && activeCardIndex > 0) {
-        setActiveCardIndex((i) => i - 1); // swipe down → prev stage
-      }
-    }
-    cardTouchStartY.current = null;
   };
 
   return (
@@ -383,36 +367,24 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
               ))}
             </div>
 
-            {/* ── Mobile full-screen card stack — hidden on desktop ── */}
-            <div
-              className="hero-showcase__mobile-stack"
-              data-theme="dark"
-              ref={mobileStackRef}
-              onTouchStart={handleCardTouchStart}
-              onTouchEnd={handleCardTouchEnd}
-              aria-label="Етапи програми"
-            >
-              {selectedTopic.showcase.cards.map((card, cardIdx) => {
-                const offset = cardIdx - activeCardIndex;
-                const isActive = offset === 0;
-                return (
+            {/* ── Mobile horizontal card swiper — hidden on desktop ── */}
+            <div className="hero-showcase__mobile-wrapper" data-theme="dark">
+              <div
+                className="hero-showcase__mobile-stack"
+                ref={mobileStackRef}
+                onScroll={handleMobileScroll}
+                aria-label="Етапи програми"
+              >
+                {selectedTopic.showcase.cards.map((card, cardIdx) => (
                   <div
                     key={`${selectedTopicId}-mobile-${cardIdx}`}
                     className="hero-showcase__mobile-card"
-                    style={{
-                      // translateY slides card in/out of viewport — no opacity = no flicker
-                      transform: `translateY(${offset * 100}%)`,
-                      pointerEvents: isActive ? 'auto' : 'none',
-                    }}
-                    aria-hidden={!isActive}
                   >
-                    {/* Background image */}
-                    <div className="hero-showcase__mobile-card__bg">
+                    {/* Top half: photo */}
+                    <div className="hero-showcase__mobile-card__photo">
                       <img src={card.image} alt={card.title} />
                     </div>
-                    {/* Dark overlay gradient */}
-                    <div className="hero-showcase__mobile-card__overlay" />
-                    {/* Content */}
+                    {/* Bottom half: white content */}
                     <div className="hero-showcase__mobile-card__content">
                       <span className="hero-showcase__mobile-card__badge">
                         {selectedTopic.showcase.badge}
@@ -423,7 +395,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                       <h3 className="hero-showcase__mobile-card__title">{card.title}</h3>
                       <div className="hero-showcase__mobile-card__services">
                         {card.services.map((s) => (
-                          <span key={s} className="service-tag service-tag--light">{s}</span>
+                          <span key={s} className="service-tag">{s}</span>
                         ))}
                       </div>
                       <p className="hero-showcase__mobile-card__desc">
@@ -431,17 +403,17 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                       </p>
                     </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
 
-              {/* Progress dots */}
+              {/* Progress dots — overlaid on wrapper, not inside scroll container */}
               <div className="hero-showcase__mobile-dots">
                 {selectedTopic.showcase.cards.map((_, i) => (
                   <button
                     key={i}
                     type="button"
                     className={`hero-showcase__mobile-dot${i === activeCardIndex ? ' hero-showcase__mobile-dot--active' : ''}`}
-                    onClick={() => setActiveCardIndex(i)}
+                    onClick={() => handleDotClick(i)}
                     aria-label={`Етап ${i + 1}`}
                   />
                 ))}
@@ -450,8 +422,8 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
               {/* Swipe hint — only on first card */}
               {activeCardIndex === 0 && (
                 <div className="hero-showcase__mobile-hint">
-                  <ChevronUp size={16} />
-                  <span>свайп вгору</span>
+                  <ArrowRight size={16} />
+                  <span>свайп вправо</span>
                 </div>
               )}
             </div>

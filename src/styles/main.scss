@@ -2625,69 +2625,67 @@ body {
   }
 }
 
-// ── Mobile full-screen showcase card stack ──────────────────────────────
-.hero-showcase__mobile-stack {
+// ── Mobile horizontal showcase card swiper ──────────────────────────────
+.hero-showcase__mobile-wrapper {
   display: none; // desktop: hidden — shown via @include mobile below
-
   position: relative;
-  height: 100dvh;
-  overflow: hidden;
+  width: 100%;
   border-radius: 1.4rem;
+  overflow: hidden;
+}
+
+.hero-showcase__mobile-stack {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .hero-showcase__mobile-card {
-  position: absolute;
-  inset: 0;
-  // Only transition transform — no opacity animation prevents flicker
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
+  width: 100vw;
+  flex-shrink: 0;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  // Inactive cards are off-screen (translateY ±100%), no need to hide them with opacity
-  // but we set opacity via JS for assistive-tech / pointer-events
+  height: 86dvh;
+  overflow: hidden;
 }
 
-.hero-showcase__mobile-card__bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+.hero-showcase__mobile-card__photo {
+  height: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 1.4rem 1.4rem 0 0;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 1.4rem;
+    display: block;
   }
 }
 
-.hero-showcase__mobile-card__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    to top,
-    rgba(10, 14, 20, 0.92) 0%,
-    rgba(10, 14, 20, 0.55) 50%,
-    rgba(10, 14, 20, 0.2) 100%
-  );
-  border-radius: 1.4rem;
-}
-
 .hero-showcase__mobile-card__content {
-  position: relative;
-  z-index: 2;
-  margin-top: auto;
-  padding: 1.5rem 1.25rem 4.5rem; // bottom space for dots + hint
+  flex: 1;
+  background: $color-white;
+  padding: 1.25rem 1.25rem 3rem; // bottom space for dots
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.55rem;
+  overflow-y: auto;
 }
 
 .hero-showcase__mobile-card__badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: rgba(255, 255, 255, 0.85);
+  background: rgba(16, 18, 24, 0.06);
+  border: 1px solid rgba(16, 18, 24, 0.1);
+  color: $color-text-muted;
   border-radius: $radius-full;
   font-size: 0.72rem;
   font-weight: 600;
@@ -2697,18 +2695,18 @@ body {
 }
 
 .hero-showcase__mobile-card__num {
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(16, 18, 24, 0.07);
   font-family: $font-heading;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .hero-showcase__mobile-card__title {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  color: $color-white;
+  color: $color-text;
   line-height: 1.2;
   font-family: $font-heading;
   margin: 0;
@@ -2721,15 +2719,15 @@ body {
 }
 
 .hero-showcase__mobile-card__desc {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.875rem;
+  color: $color-text-muted;
   line-height: 1.55;
   margin: 0;
 }
 
 .hero-showcase__mobile-dots {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 0.9rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
@@ -2742,14 +2740,14 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(16, 18, 24, 0.18);
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, width 0.2s;
+  transition: background 0.2s, width 0.2s;
 
   &--active {
-    background: $color-white;
+    background: $color-primary;
     width: 20px;
     border-radius: 3px;
   }
@@ -2757,14 +2755,14 @@ body {
 
 .hero-showcase__mobile-hint {
   position: absolute;
-  bottom: 3.5rem;
+  bottom: 2.2rem;
   right: 1.25rem;
   z-index: 3;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0.15rem;
-  color: rgba(255, 255, 255, 0.5);
+  gap: 0.3rem;
+  color: rgba(16, 18, 24, 0.35);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -2772,8 +2770,8 @@ body {
 }
 
 @keyframes hint-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
 }
 
 .quiz__wrapper,
@@ -3098,8 +3096,8 @@ body {
     overflow: hidden;
   }
 
-  // Show the mobile card stack
-  .hero-showcase__mobile-stack {
+  // Show the mobile card swiper wrapper
+  .hero-showcase__mobile-wrapper {
     display: block;
   }
 }
