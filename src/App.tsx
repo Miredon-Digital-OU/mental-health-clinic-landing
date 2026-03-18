@@ -7,7 +7,6 @@ import LeadForm from './components/LeadForm';
 import ReadinessFilter from './components/ReadinessFilter';
 import Footer from './components/Footer';
 import ClinicPage from './components/ClinicPage';
-import FloatingButton from './components/FloatingButton';
 import StickyCTA from './components/StickyCTA';
 import type { QuizAnswers } from './components/Quiz';
 import { trackEvent, EVENTS } from './utils/analytics';
@@ -125,7 +124,6 @@ function App() {
         </div>
       </main>
       <Footer />
-      {stage === 'hero' && <FloatingButton onClick={() => handleStartQuiz('floating')} />}
       {stage === 'hero' && <StickyCTA onClick={() => handleStartQuiz('floating')} />}
     </div>
   );
