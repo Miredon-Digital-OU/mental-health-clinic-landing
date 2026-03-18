@@ -1742,16 +1742,9 @@ img {
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: min(92%, 420px);
-  background: rgba($color-bg-dark, 0.94);
-  color: $color-text-light;
-  padding: 0.85rem 1.25rem;
-  border-radius: $radius-full;
-  box-shadow: $shadow-lg;
+  width: min(92%, 360px);
   display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  justify-content: center;
   z-index: 120;
 
   @include mobile {
@@ -1759,10 +1752,33 @@ img {
   }
 }
 
-.sticky-cta__text {
-  font-size: 0.9rem;
-  max-width: 55%;
-  line-height: 1.4;
+.sticky-cta__btn {
+  width: 100%;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: $color-primary;
+  color: $color-white;
+  font-family: $font-body;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: $radius-full;
+  box-shadow: 0 4px 20px rgba($color-primary, 0.35);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+
+  &:hover {
+    background: #000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
 }
 
 @keyframes gradient-move {
