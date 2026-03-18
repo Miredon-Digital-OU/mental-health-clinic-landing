@@ -26,6 +26,7 @@ type TopicData = {
   image: string;
   case: string;
   description: string;
+  tabDescription: string;
   showcase: {
     eyebrow: string;
     title: string;
@@ -49,6 +50,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     image: anxietyImg,
     case: 'Тривожність',
     description: 'Постійне напруження, тривожні думки, страх без причини. Ми допоможемо повернути відчуття безпеки і спокою.',
+    tabDescription: 'Постійне відчуття напруги, тривожні думки, страх без видимої причини. Тіло в режимі загрози навіть коли небезпеки нема. Це виснажує — і з цим можна працювати.',
     showcase: {
       eyebrow: 'Персональний маршрут при тривожності',
       title: 'Від напруження до стабільності: чіткий план у 3 етапи',
@@ -78,6 +80,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     image: depressionImg,
     case: 'Депресія',
     description: 'Спустошеність, втрата радості, важкість у кожному дні. Разом знайдемо вихід і повернемо сенс.',
+    tabDescription: 'Спустошеність, втрата інтересу до того, що раніше радувало. Важкість у кожному дні, відчуття що нічого не зміниться. Це не слабкість — це стан, який лікується.',
     showcase: {
       eyebrow: 'Персональний маршрут при депресії',
       title: 'Повертаємо енергію та інтерес до життя поетапно',
@@ -107,6 +110,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     image: burnoutImg,
     case: 'Вигорання',
     description: 'Коли більше нема сил — ні на роботу, ні на себе. Відновимо ресурс і допоможемо знайти баланс.',
+    tabDescription: 'Коли ресурс вичерпано повністю — немає сил ні на роботу, ні на близьких, ні на себе. Хронічна втома, цинізм, відчуття глухого кута. Відновлення можливе.',
     showcase: {
       eyebrow: 'Персональний маршрут при вигоранні',
       title: 'Повертаємо ресурс і працездатність без перевантаження',
@@ -136,6 +140,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     image: ptsdImg,
     case: 'ПТСР',
     description: 'Травматичний досвід, що не відпускає. Безпечна робота з пам\'яттю та нервовою системою.',
+    tabDescription: 'Травматичний досвід, який не відпускає: флешбеки, уникнення, гіперпильність. Нервова система застрягла в минулому. Є методи, які реально допомагають.',
     showcase: {
       eyebrow: 'Персональний маршрут при ПТСР',
       title: 'Відновлюємо відчуття безпеки і контроль над реакціями',
@@ -165,6 +170,7 @@ const heroTopics: Record<TopicKey, TopicData> = {
     image: relationshipsImg,
     case: 'Стосунки',
     description: 'Конфлікти, відстань, нерозуміння. Допомагаємо парам і людям відновити зв\'язок із близькими.',
+    tabDescription: 'Конфлікти по колу, відстань між партнерами, відчуття що не чують. Або біль від розриву, зради, втрати. Стосунки можна відновити — або відпустити з гідністю.',
     showcase: {
       eyebrow: 'Персональний маршрут для стосунків',
       title: 'Налагоджуємо діалог, межі та взаємну підтримку',
@@ -196,6 +202,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [variant] = useState<'A' | 'B'>(() => getVariant('hero_title'));
   const [selectedTopicId, setSelectedTopicId] = useState<TopicKey>('anxiety');
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [descOpen, setDescOpen] = useState(false);
   const showcaseRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -272,17 +279,15 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   };
 
   const handleSelectTopic = (topicId: TopicKey) => {
+    const isSame = topicId === selectedTopicId;
     setSelectedTopicId(topicId);
     setActiveCardIndex(0);
     cardRefs.current = [];
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft = 0;
     }
-    if (window.matchMedia('(max-width: 768px)').matches) {
-      setTimeout(() => {
-        showcaseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 120);
-    }
+    // Toggle description: same tab collapses, different tab opens
+    setDescOpen((prev) => (isSame ? !prev : true));
   };
 
   return (
@@ -352,6 +357,14 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
               })}
             </div>
           </motion.div>
+
+          {/* ── Condition description accordion ────────────────────── */}
+          <div
+            className={`hero__condition-desc${descOpen ? ' hero__condition-desc--open' : ''}`}
+            aria-live="polite"
+          >
+            <p>{selectedTopic.tabDescription}</p>
+          </div>
         </motion.div>
 
         {/* ── Hero scroll hint ───────────────────────────────────── */}

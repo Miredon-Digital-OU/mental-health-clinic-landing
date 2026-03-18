@@ -2408,6 +2408,30 @@ body {
   }
 }
 
+.hero__condition-desc {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
+  margin-top: 0;
+
+  &--open {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 0.75rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $color-text-muted;
+    line-height: 1.6;
+    padding: 0.75rem 1rem;
+    background: rgba(16, 18, 24, 0.04);
+    border-radius: 0.75rem;
+    text-align: left;
+  }
+}
+
 .hero__gallery-strip {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
