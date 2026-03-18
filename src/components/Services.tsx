@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Activity, Brain, ChevronDown, Dna, Glasses } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 type ServiceCard = {
   id: 'neurofeedback' | 'vr' | 'genotyping' | 'mental-care';
@@ -59,27 +60,33 @@ const cards: ServiceCard[] = [
 
 const Services: React.FC = () => {
   const [expandedId, setExpandedId] = useState<ServiceCard['id'] | null>(null);
+  const sectionRef = useScrollReveal();
 
   const toggleCard = (cardId: ServiceCard['id']) => {
     setExpandedId((prev) => (prev === cardId ? null : cardId));
   };
 
   return (
-    <section id="services" className="section services">
+    <section id="services" className="section services" ref={sectionRef as React.RefObject<HTMLElement>}>
       <div className="container">
         <div className="text-center mb-5">
-          <h2 className="section__title">Методи, які підсилюють терапію</h2>
-          <p className="section__subtitle mb-4">
+          <h2 className="section__title" data-reveal>Методи, які підсилюють терапію</h2>
+          <p className="section__subtitle mb-4" data-reveal data-reveal-delay="80">
             Розкрийте картку, щоб коротко побачити, кому і коли цей підхід може підійти.
           </p>
         </div>
 
         <div className="services-cards-grid">
-          {cards.map((card) => {
+          {cards.map((card, index) => {
             const isExpanded = expandedId === card.id;
 
             return (
-              <article key={card.id} className={`service-expand-card ${isExpanded ? 'service-expand-card--open' : ''}`}>
+              <article
+                key={card.id}
+                className={`service-expand-card ${isExpanded ? 'service-expand-card--open' : ''}`}
+                data-reveal
+                data-reveal-delay={String(index * 100)}
+              >
                 <button
                   type="button"
                   className="service-expand-card__trigger"

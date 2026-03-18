@@ -1,8 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { fadeInUp, staggerContainer } from '../styles/animations';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const PainPoints: React.FC = () => {
+    const sectionRef = useScrollReveal();
     const points = [
         "«Важко сказати, чи це просто стрес, чи вже хвороба».",
         "«Я відвідую психолога, але чи потрібен мені психіатр, поки що не зрозуміло».",
@@ -10,33 +10,25 @@ const PainPoints: React.FC = () => {
     ];
 
     return (
-        <section id="problems" className="section problems">
+        <section id="problems" className="section problems" ref={sectionRef as React.RefObject<HTMLElement>}>
             <div className="container">
-                <motion.div 
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={staggerContainer}
-                    className="text-center mb-5"
-                >
-                    <motion.h2 variants={fadeInUp} className="section__title">Проблеми та болі</motion.h2>
-                    <motion.p variants={fadeInUp} className="section__subtitle">
+                <div className="text-center mb-5">
+                    <h2 className="section__title" data-reveal>Проблеми та болі</h2>
+                    <p className="section__subtitle" data-reveal data-reveal-delay="80">
                         Ми розуміємо, через що ви проходите. Наші пацієнти часто діляться цими думками:
-                    </motion.p>
-                </motion.div>
+                    </p>
+                </div>
 
                 <div className="grid grid--3">
                     {points.map((text, index) => (
-                        <motion.div 
+                        <div
                             key={index}
                             className="card card--problem"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
+                            data-reveal
+                            data-reveal-delay={String(index * 100)}
                         >
                             <p className="pain-quote">{text}</p>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>

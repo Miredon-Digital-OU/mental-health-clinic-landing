@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { ShieldCheck, HeartPulse, Sparkles } from 'lucide-react';
-import { fadeInUp, staggerContainer } from '../styles/animations';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const Benefits: React.FC = () => {
+  const sectionRef = useScrollReveal();
   const items = [
     {
       title: 'Одна команда — одна траєкторія',
@@ -23,36 +23,26 @@ const Benefits: React.FC = () => {
   ];
 
   return (
-    <section className="section benefits">
+    <section className="section benefits" ref={sectionRef as React.RefObject<HTMLElement>}>
       <div className="container">
-        <motion.div
-          className="text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={staggerContainer}
-        >
-          <motion.h2 variants={fadeInUp} className="section__title">
-            Чому це працює
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="section__subtitle">
+        <div className="text-center">
+          <h2 className="section__title" data-reveal>Чому це працює</h2>
+          <p className="section__subtitle" data-reveal data-reveal-delay="80">
             Якісна допомога, що поєднує турботу, технології та клінічні стандарти.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
         <div className="grid grid--3">
           {items.map((item, index) => (
-            <motion.div
+            <div
               key={item.title}
               className="card benefit-card"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              data-reveal
+              data-reveal-delay={String(index * 100)}
             >
               <div className="tag">{item.icon} {item.title}</div>
               <p className="text-muted" style={{ marginTop: '0.75rem' }}>{item.text}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

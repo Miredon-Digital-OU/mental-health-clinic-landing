@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 type StickyCTAProps = {
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const StickyCTA: React.FC<StickyCTAProps> = ({ onClick }) => {

@@ -1,14 +1,14 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { 
-  ShieldCheck, 
-  Activity, 
-  Users, 
+import {
+  ShieldCheck,
+  Activity,
+  Users,
   Heart,
   Eye,
   Zap,
   UserCheck
 } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const HowItWorks: React.FC = () => {
     const phases = [
@@ -55,25 +55,25 @@ const HowItWorks: React.FC = () => {
         }
     ];
 
+    const sectionRef = useScrollReveal();
+
     return (
-        <section className="section bg-light" id="process">
+        <section className="section bg-light" id="process" ref={sectionRef as React.RefObject<HTMLElement>}>
             <div className="container">
                 <div className="section__header text-center mb-5">
-                    <h2 className="section__title">Як працює наш метод</h2>
-                    <p className="section__subtitle mx-auto">
-                        Трьохрівнева система відновлення ментального здоров'я
+                    <h2 className="section__title" data-reveal>Як працює наш метод</h2>
+                    <p className="section__subtitle mx-auto" data-reveal data-reveal-delay="80">
+                        Трьохрівнева система відновлення ментального здоров&apos;я
                     </p>
                 </div>
 
                 <div className="phases-grid mt-5">
                     {phases.map((phase, idx) => (
-                        <motion.div 
+                        <div
                             key={idx}
                             className="phase-column"
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: idx * 0.2 }}
+                            data-reveal
+                            data-reveal-delay={String(idx * 120)}
                         >
                             <div className="phase-card">
                                 <div className="phase-card__header">
@@ -90,7 +90,7 @@ const HowItWorks: React.FC = () => {
                                     ))}
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>
