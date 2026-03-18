@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowDown, ChevronRight } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '../styles/animations';
 import { getVariant } from '../utils/abTesting';
 
@@ -197,81 +197,61 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [selectedTopicId, setSelectedTopicId] = useState<TopicKey>('anxiety');
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const showcaseRef = useRef<HTMLDivElement>(null);
-  const mobileStackRef = useRef<HTMLDivElement>(null);
-  const galleryStripRef = useRef<HTMLDivElement>(null);
-  // horizontal swipe on the showcase (topic navigation)
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // One-time swipe hints (guarded by sessionStorage, mobile-only)
-  const isMobileCheck = () =>
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
-  const [showTabsHint, setShowTabsHint] = useState(
-    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_tabs'),
-  );
+  // Cards hint — once per session on mobile
   const [showCardsHint, setShowCardsHint] = useState(
-    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_cards'),
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 768px)').matches &&
+      !sessionStorage.getItem('opora_hint_cards'),
   );
+  // Hero down-arrow hint — once per session on mobile
   const [showHeroHint, setShowHeroHint] = useState(
-    () => isMobileCheck() && !sessionStorage.getItem('opora_hint_hero'),
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 768px)').matches &&
+      !sessionStorage.getItem('opora_hint_hero'),
   );
 
   const selectedTopic = heroTopics[selectedTopicId];
 
-  const handleMobileScroll = () => {
-    const el = mobileStackRef.current;
-    if (!el) return;
-    const index = Math.round(el.scrollLeft / el.offsetWidth);
-    setActiveCardIndex(index);
-    // Dismiss cards hint on first real scroll
-    if (showCardsHint && el.scrollLeft > 10) {
-      setShowCardsHint(false);
-      sessionStorage.setItem('opora_hint_cards', '1');
-    }
-  };
-
-  const handleDotClick = (i: number) => {
-    const el = mobileStackRef.current;
-    if (!el) return;
-    el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
-  };
-
-  // Tabs: peek-scroll 30px right then back + dismiss on first scroll
+  // IntersectionObserver: which card is ≥60% visible → drives pagination dots
   useEffect(() => {
-    if (!showTabsHint) return;
-    const el = galleryStripRef.current;
-    if (!el) return;
+    const container = scrollContainerRef.current;
+    const cards = cardRefs.current.filter((c): c is HTMLDivElement => c !== null);
+    if (!container || cards.length === 0) return;
 
-    const dismiss = () => {
-      setShowTabsHint(false);
-      sessionStorage.setItem('opora_hint_tabs', '1');
-    };
-    // Dismiss immediately when user scrolls themselves
-    el.addEventListener('scroll', dismiss, { once: true });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = cardRefs.current.indexOf(entry.target as HTMLDivElement);
+            if (idx !== -1) setActiveCardIndex(idx);
+          }
+        });
+      },
+      { root: container, threshold: 0.6 },
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [selectedTopicId]);
 
-    let t2: ReturnType<typeof setTimeout>;
-    let t3: ReturnType<typeof setTimeout>;
-    const t1 = setTimeout(() => {
-      el.scrollTo({ left: 30, behavior: 'smooth' });
-      t2 = setTimeout(() => {
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-        t3 = setTimeout(dismiss, 800);
-      }, 600);
-    }, 1600);
-    return () => {
-      el.removeEventListener('scroll', dismiss);
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-    };
-  }, [showTabsHint]);
-
-  // Cards hint: auto-dismiss after 3.5s
+  // Cards hint: auto-dismiss after 3s or on first scroll
   useEffect(() => {
     if (!showCardsHint) return;
-    const t = setTimeout(() => {
+    const container = scrollContainerRef.current;
+    const dismiss = () => {
       setShowCardsHint(false);
       sessionStorage.setItem('opora_hint_cards', '1');
-    }, 3500);
-    return () => clearTimeout(t);
+    };
+    if (container) container.addEventListener('scroll', dismiss, { once: true });
+    const t = setTimeout(dismiss, 3000);
+    return () => {
+      container?.removeEventListener('scroll', dismiss);
+      clearTimeout(t);
+    };
   }, [showCardsHint]);
 
   // Hero down-arrow hint: auto-dismiss after 4s
@@ -284,35 +264,25 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     return () => clearTimeout(t);
   }, [showHeroHint]);
 
+  const handleDotClick = (i: number) => {
+    const container = scrollContainerRef.current;
+    const card = cardRefs.current[i];
+    if (!container || !card) return;
+    container.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+  };
+
   const handleSelectTopic = (topicId: TopicKey) => {
     setSelectedTopicId(topicId);
     setActiveCardIndex(0);
-    if (mobileStackRef.current) {
-      mobileStackRef.current.scrollLeft = 0;
+    cardRefs.current = [];
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
     }
     if (window.matchMedia('(max-width: 768px)').matches) {
       setTimeout(() => {
         showcaseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 120);
     }
-  };
-
-  // Horizontal swipe on the showcase section → topic navigation
-  const handleShowcaseTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-  const handleShowcaseTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const dy = e.changedTouches[0].clientY - touchStartY.current;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      const currentIndex = heroTopicOrder.indexOf(selectedTopicId);
-      const nextIndex = (currentIndex + (dx < 0 ? 1 : -1) + heroTopicOrder.length) % heroTopicOrder.length;
-      handleSelectTopic(heroTopicOrder[nextIndex]);
-    }
-    touchStartX.current = null;
-    touchStartY.current = null;
   };
 
   return (
@@ -356,7 +326,7 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
 
           {/* ── Condition tabs ─────────────────────────────────────── */}
           <motion.div variants={fadeInUp} className="hero__gallery-strip-wrap">
-            <div className="hero__gallery-strip" ref={galleryStripRef}>
+            <div className="hero__gallery-strip">
               {heroTopicOrder.map((topicId, index) => {
                 const item = heroTopics[topicId];
                 const isActive = selectedTopicId === topicId;
@@ -381,11 +351,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                 );
               })}
             </div>
-            {showTabsHint && (
-              <div className="hero__tabs-hint-edge" aria-hidden="true">
-                <ChevronRight size={16} />
-              </div>
-            )}
           </motion.div>
         </motion.div>
 
@@ -404,8 +369,6 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7 }}
-          onTouchStart={handleShowcaseTouchStart}
-          onTouchEnd={handleShowcaseTouchEnd}
         >
           {/* Desktop copy — hidden on mobile via CSS */}
           <div className="hero-showcase__copy">
@@ -447,61 +410,57 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
             {/* ── Mobile horizontal card swiper — hidden on desktop ── */}
             <div className="hero-showcase__mobile-wrapper" data-theme="dark">
               <div
-                className="hero-showcase__mobile-stack"
-                ref={mobileStackRef}
-                onScroll={handleMobileScroll}
+                className="stage-cards-mobile"
+                ref={scrollContainerRef}
                 aria-label="Етапи програми"
               >
-                {selectedTopic.showcase.cards.map((card, cardIdx) => (
+                {selectedTopic.showcase.cards.map((card, idx) => (
                   <div
-                    key={`${selectedTopicId}-mobile-${cardIdx}`}
-                    className="hero-showcase__mobile-card"
+                    key={`${selectedTopicId}-card-${idx}`}
+                    ref={(el) => { cardRefs.current[idx] = el; }}
+                    className="stage-card-mobile"
                   >
-                    {/* Top half: photo */}
-                    <div className="hero-showcase__mobile-card__photo">
+                    {/* Photo — hint overlay lives here to be visible over the image */}
+                    <div className="stage-card-mobile__photo">
                       <img src={card.image} alt={card.title} />
+                      {idx === 0 && showCardsHint && (
+                        <div className="stage-cards-swipe-hint" aria-hidden="true">
+                          ← свайп →
+                        </div>
+                      )}
                     </div>
-                    {/* Bottom half: white content */}
-                    <div className="hero-showcase__mobile-card__content">
-                      <span className="hero-showcase__mobile-card__badge">
+                    {/* White content area */}
+                    <div className="stage-card-mobile__content">
+                      <span className="stage-card-mobile__badge">
                         {selectedTopic.showcase.badge}
                       </span>
-                      <span className="hero-showcase__mobile-card__num">
-                        {String(cardIdx + 1).padStart(2, '0')}
+                      <span className="stage-card-mobile__num">
+                        {String(idx + 1).padStart(2, '0')}
                       </span>
-                      <h3 className="hero-showcase__mobile-card__title">{card.title}</h3>
-                      <div className="hero-showcase__mobile-card__services">
+                      <h3 className="stage-card-mobile__title">{card.title}</h3>
+                      <div className="stage-card-mobile__services">
                         {card.services.map((s) => (
                           <span key={s} className="service-tag">{s}</span>
                         ))}
                       </div>
-                      <p className="hero-showcase__mobile-card__desc">
-                        {stageDescriptions[cardIdx]}
-                      </p>
+                      <p className="stage-card-mobile__desc">{stageDescriptions[idx]}</p>
                     </div>
-                    {/* Swipe hint — only on first card, circle arrow */}
-                    {cardIdx === 0 && showCardsHint && (
-                      <div className="hero-showcase__swipe-hint" aria-hidden="true">
-                        <ChevronRight size={18} />
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
 
-              {/* Progress dots — overlaid on wrapper, not inside scroll container */}
-              <div className="hero-showcase__mobile-dots">
+              {/* Pagination dots — below the scroll container */}
+              <div className="stage-cards-dots">
                 {selectedTopic.showcase.cards.map((_, i) => (
                   <button
                     key={i}
                     type="button"
-                    className={`hero-showcase__mobile-dot${i === activeCardIndex ? ' hero-showcase__mobile-dot--active' : ''}`}
+                    className={`stage-cards-dot${i === activeCardIndex ? ' stage-cards-dot--active' : ''}`}
                     onClick={() => handleDotClick(i)}
                     aria-label={`Етап ${i + 1}`}
                   />
                 ))}
               </div>
-
             </div>
           </div>
         </motion.div>

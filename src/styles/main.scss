@@ -2391,33 +2391,21 @@ body {
 .hero__gallery-strip-wrap {
   position: relative;
   margin-top: 1.4rem;
-}
 
-.hero__tabs-hint-edge {
-  display: none;
-
+  // Static CSS gradient on right edge — no JS, always shows there's more to scroll
   @include mobile {
-    display: flex;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 52px;
-    background: linear-gradient(to right, transparent, rgba(236, 239, 239, 0.92) 55%);
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 6px;
-    color: $color-text;
-    pointer-events: none;
-    z-index: 10;
-    // Persistent pulse so it stays visible until user scrolls
-    animation: tabs-hint-pulse 2s ease-in-out infinite;
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 48px;
+      background: linear-gradient(to right, transparent, $color-bg);
+      pointer-events: none;
+      z-index: 2;
+    }
   }
-}
-
-@keyframes tabs-hint-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
 }
 
 .hero__gallery-strip {
@@ -2666,41 +2654,36 @@ body {
 }
 
 // ── Mobile horizontal showcase card swiper ──────────────────────────────
+// ── Mobile horizontal stage card swiper ──────────────────────────────────
 .hero-showcase__mobile-wrapper {
-  display: none; // desktop: hidden — shown via @include mobile below
+  display: none; // desktop: hidden — shown via @include mobile
   position: relative;
   width: 100%;
-  border-radius: 1.4rem;
-  overflow: hidden;
 }
 
-.hero-showcase__mobile-stack {
+.stage-cards-mobile {
   display: flex;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x; // prevent vertical jitter — only allow horizontal panning
+  touch-action: pan-x; // only on the container — children retain default touch handling
   scrollbar-width: none;
   width: 100%;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  &::-webkit-scrollbar { display: none; }
 }
 
-.hero-showcase__mobile-card {
-  position: relative; // anchor for the swipe hint
-  width: 100vw;
-  flex-shrink: 0;
+.stage-card-mobile {
+  flex: 0 0 100%;
+  width: 100%;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  height: 86dvh;
-  // No overflow:hidden here — the photo has its own rounded corners
 }
 
-.hero-showcase__mobile-card__photo {
-  height: 50%;
+.stage-card-mobile__photo {
+  position: relative; // for the swipe hint overlay
+  height: 45vw;
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 1.4rem 1.4rem 0 0;
@@ -2713,17 +2696,15 @@ body {
   }
 }
 
-.hero-showcase__mobile-card__content {
-  flex: 1;
+.stage-card-mobile__content {
   background: $color-white;
-  padding: 1.25rem 1.25rem 3rem; // bottom space for dots
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  overflow: hidden; // no independent scroll — prevents vertical jitter
 }
 
-.hero-showcase__mobile-card__badge {
+.stage-card-mobile__badge {
   display: inline-block;
   background: rgba(16, 18, 24, 0.06);
   border: 1px solid rgba(16, 18, 24, 0.1);
@@ -2736,7 +2717,7 @@ body {
   letter-spacing: 0.04em;
 }
 
-.hero-showcase__mobile-card__num {
+.stage-card-mobile__num {
   font-size: 2.4rem;
   font-weight: 800;
   color: rgba(16, 18, 24, 0.07);
@@ -2745,7 +2726,7 @@ body {
   letter-spacing: -0.04em;
 }
 
-.hero-showcase__mobile-card__title {
+.stage-card-mobile__title {
   font-size: 1.35rem;
   font-weight: 700;
   color: $color-text;
@@ -2754,31 +2735,29 @@ body {
   margin: 0;
 }
 
-.hero-showcase__mobile-card__services {
+.stage-card-mobile__services {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
 
-.hero-showcase__mobile-card__desc {
+.stage-card-mobile__desc {
   font-size: 0.875rem;
   color: $color-text-muted;
   line-height: 1.55;
   margin: 0;
 }
 
-.hero-showcase__mobile-dots {
-  position: absolute;
-  bottom: 0.9rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
+// Pagination dots — flow below the scroll container
+.stage-cards-dots {
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
+  padding: 0.7rem 0;
   align-items: center;
 }
 
-.hero-showcase__mobile-dot {
+.stage-cards-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -2795,34 +2774,31 @@ body {
   }
 }
 
-// Circular swipe-right hint rendered inside the first stage card
-.hero-showcase__swipe-hint {
-  display: none;
-
-  @include mobile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    right: 16px;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 50%;
-    color: $color-text;
-    z-index: 10;
-    pointer-events: none;
-    animation: swipeHintX 1.5s ease-in-out 2 forwards;
-  }
+// Pill-shaped swipe hint — overlaid on the first card's photo area
+.stage-cards-swipe-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 14, 20, 0.65);
+  color: $color-white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.35rem 1rem;
+  border-radius: $radius-full;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0; // animation handles visibility
+  animation: swipe-hint-show 3.5s ease-in-out forwards;
+  animation-delay: 0.5s;
 }
 
-@keyframes swipeHintX {
-  0%   { transform: translateY(-50%) translateX(0);    opacity: 0.9; }
-  40%  { transform: translateY(-50%) translateX(10px); opacity: 1;   }
-  80%  { transform: translateY(-50%) translateX(0);    opacity: 0.9; }
-  100% { transform: translateY(-50%) translateX(0);    opacity: 0;   }
+@keyframes swipe-hint-show {
+  0%   { opacity: 0; }
+  12%  { opacity: 1; }
+  78%  { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 // Hero section scroll-down hint (bounces 3x then CSS auto-fades via JS dismiss)
