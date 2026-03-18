@@ -2582,10 +2582,13 @@ body {
 .hero-showcase__mobile-card {
   position: absolute;
   inset: 0;
-  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.42s ease;
-  will-change: transform, opacity;
+  // Only transition transform — no opacity animation prevents flicker
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
   display: flex;
   flex-direction: column;
+  // Inactive cards are off-screen (translateY ±100%), no need to hide them with opacity
+  // but we set opacity via JS for assistive-tech / pointer-events
 }
 
 .hero-showcase__mobile-card__bg {

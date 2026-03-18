@@ -399,8 +399,8 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                     key={`${selectedTopicId}-mobile-${cardIdx}`}
                     className="hero-showcase__mobile-card"
                     style={{
+                      // translateY slides card in/out of viewport — no opacity = no flicker
                       transform: `translateY(${offset * 100}%)`,
-                      opacity: isActive ? 1 : 0,
                       pointerEvents: isActive ? 'auto' : 'none',
                     }}
                     aria-hidden={!isActive}
