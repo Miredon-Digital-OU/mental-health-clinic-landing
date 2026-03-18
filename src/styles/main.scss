@@ -3049,6 +3049,10 @@ body {
 }
 
 @include mobile {
+  .header {
+    padding-bottom: 0.5rem; // cap gap between header card and hero card at ~8px
+  }
+
   .header__shell {
     padding: 0.75rem 0.9rem;
     border-radius: 1.1rem;
