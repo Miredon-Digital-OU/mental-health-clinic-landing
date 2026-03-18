@@ -2301,11 +2301,16 @@ body {
   }
 
   @include mobile {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 0.65rem;
+    padding-bottom: 0.4rem;
 
-    .hero-gallery-item:nth-child(5) {
-      display: none;
-    }
+    // Hide scrollbar visually but keep it functional
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
   }
 
   img {
@@ -2333,6 +2338,12 @@ body {
     aspect-ratio: 1.2 / 1;
     object-fit: cover;
     border-radius: 1.2rem;
+  }
+
+  @include mobile {
+    flex: 0 0 148px;
+    width: 148px;
+    scroll-snap-align: start;
   }
 }
 
@@ -2370,7 +2381,11 @@ body {
   line-height: 1.3;
 
   @include mobile {
-    display: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.7rem;
   }
 }
 
@@ -2692,11 +2707,7 @@ body {
   }
 
   .hero__gallery-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-
-    .hero-gallery-item:nth-child(5) {
-      display: none;
-    }
+    // horizontal scroll layout handled in component styles
   }
 
   .hero-showcase {
