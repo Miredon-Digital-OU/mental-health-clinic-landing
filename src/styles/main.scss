@@ -479,9 +479,9 @@ img {
   align-items: center;
 
   @include mobile {
-    padding-top: 88px;
-    padding-bottom: 3rem;
-    min-height: auto; // let content dictate height, CTA visible above fold
+    padding-top: 0.5rem; // header is position:static on mobile — no offset needed
+    padding-bottom: 2rem;
+    min-height: auto;
   }
 
   &--centered {
@@ -2666,7 +2666,6 @@ body {
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x; // only on the container — children retain default touch handling
   scrollbar-width: none;
   width: 100%;
 
@@ -3068,7 +3067,7 @@ body {
 
   .hero-shell {
     border-radius: 1.5rem;
-    padding: 2.1rem 1rem 1rem;
+    padding: 1.2rem 1rem 0.75rem;
   }
 
   .clinic-hero__container {
@@ -3104,11 +3103,26 @@ body {
   }
 
   .hero__title {
-    font-size: 2.05rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero__kicker {
+    margin-bottom: 0.6rem;
   }
 
   .hero__subtitle {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .hero__note {
+    margin-bottom: 0.6rem;
+    margin-top: -0.1rem;
+  }
+
+  .hero__actions {
+    margin-bottom: 0.75rem;
   }
 
   .hero__gallery-strip {
