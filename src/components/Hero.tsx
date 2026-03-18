@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowDown, ChevronRight } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '../styles/animations';
 import { getVariant } from '../utils/abTesting';
 
@@ -198,9 +198,15 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const showcaseRef = useRef<HTMLDivElement>(null);
   const mobileStackRef = useRef<HTMLDivElement>(null);
+  const galleryStripRef = useRef<HTMLDivElement>(null);
   // horizontal swipe on the showcase (topic navigation)
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+
+  // One-time swipe hints (guarded by sessionStorage)
+  const [showTabsHint, setShowTabsHint] = useState(false);
+  const [showCardsHint, setShowCardsHint] = useState(false);
+  const [showHeroHint, setShowHeroHint] = useState(false);
 
   const selectedTopic = heroTopics[selectedTopicId];
 
@@ -217,6 +223,11 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     if (!el) return;
     const index = Math.round(el.scrollLeft / el.offsetWidth);
     setActiveCardIndex(index);
+    // Dismiss cards hint on first real scroll
+    if (showCardsHint && el.scrollLeft > 10) {
+      setShowCardsHint(false);
+      sessionStorage.setItem('opora_hint_cards', '1');
+    }
   };
 
   const handleDotClick = (i: number) => {
@@ -224,6 +235,54 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
     if (!el) return;
     el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
   };
+
+  // Init hints on mount — mobile only, once per session
+  useEffect(() => {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    if (!sessionStorage.getItem('opora_hint_tabs')) setShowTabsHint(true);
+    if (!sessionStorage.getItem('opora_hint_cards')) setShowCardsHint(true);
+    if (!sessionStorage.getItem('opora_hint_hero')) setShowHeroHint(true);
+  }, []);
+
+  // Tabs: peek-scroll 30px right then back
+  useEffect(() => {
+    if (!showTabsHint) return;
+    const el = galleryStripRef.current;
+    if (!el) return;
+    let t2: ReturnType<typeof setTimeout>;
+    let t3: ReturnType<typeof setTimeout>;
+    const t1 = setTimeout(() => {
+      el.scrollTo({ left: 30, behavior: 'smooth' });
+      t2 = setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+        t3 = setTimeout(() => {
+          setShowTabsHint(false);
+          sessionStorage.setItem('opora_hint_tabs', '1');
+        }, 800);
+      }, 600);
+    }, 1600);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [showTabsHint]);
+
+  // Cards hint: auto-dismiss after 3.5s
+  useEffect(() => {
+    if (!showCardsHint) return;
+    const t = setTimeout(() => {
+      setShowCardsHint(false);
+      sessionStorage.setItem('opora_hint_cards', '1');
+    }, 3500);
+    return () => clearTimeout(t);
+  }, [showCardsHint]);
+
+  // Hero down-arrow hint: auto-dismiss after 4s
+  useEffect(() => {
+    if (!showHeroHint) return;
+    const t = setTimeout(() => {
+      setShowHeroHint(false);
+      sessionStorage.setItem('opora_hint_hero', '1');
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [showHeroHint]);
 
   const handleSelectTopic = (topicId: TopicKey) => {
     setSelectedTopicId(topicId);
@@ -292,32 +351,46 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           </motion.p>
 
           {/* ── Condition tabs ─────────────────────────────────────── */}
-          <motion.div variants={fadeInUp} className="hero__gallery-strip">
-            {heroTopicOrder.map((topicId, index) => {
-              const item = heroTopics[topicId];
-              const isActive = selectedTopicId === topicId;
-              return (
-                <motion.button
-                  key={item.case}
-                  type="button"
-                  className={`hero-gallery-item${isActive ? ' hero-gallery-item--active' : ''}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => handleSelectTopic(topicId)}
-                  aria-pressed={isActive}
-                  aria-label={`Показати програму для стану: ${item.case}`}
-                >
-                  <img src={item.image} alt={item.case} width={200} height={150} loading="lazy" />
-                  <div className="hero-gallery-item__overlay">
-                    <span className="hero-gallery-item__case">{item.case}</span>
-                    <span className="hero-gallery-item__desc">{item.description}</span>
-                  </div>
-                </motion.button>
-              );
-            })}
+          <motion.div variants={fadeInUp} className="hero__gallery-strip-wrap">
+            <div className="hero__gallery-strip" ref={galleryStripRef}>
+              {heroTopicOrder.map((topicId, index) => {
+                const item = heroTopics[topicId];
+                const isActive = selectedTopicId === topicId;
+                return (
+                  <motion.button
+                    key={item.case}
+                    type="button"
+                    className={`hero-gallery-item${isActive ? ' hero-gallery-item--active' : ''}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    onClick={() => handleSelectTopic(topicId)}
+                    aria-pressed={isActive}
+                    aria-label={`Показати програму для стану: ${item.case}`}
+                  >
+                    <img src={item.image} alt={item.case} width={200} height={150} loading="lazy" />
+                    <div className="hero-gallery-item__overlay">
+                      <span className="hero-gallery-item__case">{item.case}</span>
+                      <span className="hero-gallery-item__desc">{item.description}</span>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+            {showTabsHint && (
+              <div className="hero__tabs-hint-edge" aria-hidden="true">
+                <ChevronRight size={16} />
+              </div>
+            )}
           </motion.div>
         </motion.div>
+
+        {/* ── Hero scroll hint ───────────────────────────────────── */}
+        {showHeroHint && (
+          <div className="hero__scroll-hint" aria-hidden="true">
+            <ArrowDown size={22} />
+          </div>
+        )}
 
         {/* ── Showcase ───────────────────────────────────────────── */}
         <motion.div
@@ -419,9 +492,9 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
                 ))}
               </div>
 
-              {/* Swipe hint — only on first card */}
-              {activeCardIndex === 0 && (
-                <div className="hero-showcase__mobile-hint">
+              {/* Swipe hint — pulses 2x then auto-dismisses via sessionStorage */}
+              {showCardsHint && (
+                <div className="hero-showcase__mobile-hint hero-showcase__mobile-hint--pulse">
                   <ArrowRight size={16} />
                   <span>свайп вправо</span>
                 </div>

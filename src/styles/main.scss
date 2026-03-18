@@ -2383,8 +2383,43 @@ body {
   }
 }
 
-.hero__gallery-strip {
+.hero__gallery-strip-wrap {
+  position: relative;
   margin-top: 1.4rem;
+
+  @include mobile {
+    overflow: hidden;
+  }
+}
+
+.hero__tabs-hint-edge {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0.4rem;
+    width: 44px;
+    background: linear-gradient(to right, transparent, rgba(236, 239, 239, 0.9) 60%);
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 4px;
+    color: $color-text-muted;
+    pointer-events: none;
+    animation: tabs-hint-fade 2s ease-in-out forwards;
+  }
+}
+
+@keyframes tabs-hint-fade {
+  0%   { opacity: 0; }
+  25%  { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.hero__gallery-strip {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.9rem;
@@ -2776,6 +2811,37 @@ body {
 @keyframes hint-bob {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(5px); }
+}
+
+// Pulse modifier: 2 pulses then fades out (used for cards swipe hint)
+.hero-showcase__mobile-hint--pulse {
+  animation: cards-hint-pulse 1.4s ease-in-out 2 forwards;
+}
+
+@keyframes cards-hint-pulse {
+  0%   { opacity: 0; transform: translateX(0); }
+  20%  { opacity: 1; }
+  60%  { transform: translateX(6px); opacity: 1; }
+  80%  { transform: translateX(0); opacity: 1; }
+  100% { opacity: 0; }
+}
+
+// Hero section scroll-down hint (bounces 3x then CSS auto-fades via JS dismiss)
+.hero__scroll-hint {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    justify-content: center;
+    margin: 0.25rem 0 0.5rem;
+    color: $color-text-muted;
+    animation: hero-bounce 1.1s ease-in-out 3 forwards;
+  }
+}
+
+@keyframes hero-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%       { transform: translateY(7px); opacity: 1; }
 }
 
 .quiz__wrapper,
