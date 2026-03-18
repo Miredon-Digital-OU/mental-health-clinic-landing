@@ -8,6 +8,7 @@ import ReadinessFilter from './components/ReadinessFilter';
 import Footer from './components/Footer';
 import ClinicPage from './components/ClinicPage';
 import StickyCTA from './components/StickyCTA';
+import ScrollToTop from './components/ScrollToTop';
 import type { QuizAnswers } from './components/Quiz';
 import { trackEvent, EVENTS } from './utils/analytics';
 import { captureAttribution } from './utils/attribution';
@@ -125,6 +126,7 @@ function App() {
       </main>
       <Footer />
       {stage === 'hero' && <StickyCTA onClick={() => handleStartQuiz('floating')} />}
+      <ScrollToTop />
     </div>
   );
 }
