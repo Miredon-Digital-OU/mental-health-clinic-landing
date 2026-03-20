@@ -78,6 +78,29 @@ function getResult(answers: QuizAnswers): ResultProfile {
   };
 }
 
+const methodBlocks = [
+  {
+    key: 'vr',
+    match: (answers: QuizAnswers) => Object.values(answers).some((a) => a.includes('VR')),
+    title: 'VR-терапія',
+    text: 'Занурення у спеціально створене віртуальне середовище під наглядом спеціаліста. Безпечно опрацьовуємо страхи, тривожність та складні стани — без необхідності відтворювати їх у реальному житті.',
+  },
+  {
+    key: 'neurofeedback',
+    match: (answers: QuizAnswers) =>
+      Object.values(answers).some((a) => a.toLowerCase().includes('нейрофідбек')),
+    title: 'Нейрофідбек',
+    text: 'Тренування мозку через зворотний зв\'язок у реальному часі. Метод допомагає нормалізувати роботу нервової системи, підвищити стресостійкість і відновити емоційний баланс без медикаментів.',
+  },
+  {
+    key: 'genetics',
+    match: (answers: QuizAnswers) =>
+      Object.values(answers).some((a) => a.toLowerCase().includes('генетичний')),
+    title: 'Генетичний профіль психічного здоров\'я',
+    text: 'Аналіз ДНК дозволяє оцінити індивідуальні схильності та підібрати найефективнішу стратегію лікування саме для вас — без зайвих спроб і помилок.',
+  },
+];
+
 type QuizResultProps = {
   answers: QuizAnswers;
   onContinue: () => void;
@@ -85,6 +108,10 @@ type QuizResultProps = {
 
 const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
   const result = useMemo(() => getResult(answers), [answers]);
+  const activeMethodBlocks = useMemo(
+    () => methodBlocks.filter((b) => b.match(answers)),
+    [answers],
+  );
 
   React.useEffect(() => {
     trackEvent(EVENTS.RESULT_SHOWN, { result: result.title });
@@ -116,6 +143,16 @@ const QuizResult: React.FC<QuizResultProps> = ({ answers, onContinue }) => {
             ))}
           </ul>
           <p className="quiz-result__description">{result.description}</p>
+          {activeMethodBlocks.length > 0 && (
+            <div className="quiz-result__methods">
+              {activeMethodBlocks.map((block) => (
+                <div key={block.key} className="quiz-result__method-block">
+                  <h3>{block.title}</h3>
+                  <p>{block.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
           <button
             type="button"
             className="btn btn--primary quiz-result__cta"
