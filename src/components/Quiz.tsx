@@ -31,11 +31,24 @@ const slideVariants = {
   }),
 };
 
+const packageDescriptions: Record<string, string> = {
+  'Разова консультація з психологом — 1200 грн':
+    'Перша зустріч з психологом: розбираємо ваш запит, визначаємо стан і намічаємо напрямок роботи. Підходить якщо хочете спробувати або отримати відповідь на конкретне питання.',
+  'Курс із 4 зустрічей — 6000 грн':
+    'Чотири сесії з психотерапевтом для глибшої роботи з причинами стану. Формуємо план, відпрацьовуємо ключові патерни, фіксуємо перші стійкі зміни.',
+  'Поглиблена робота з психіатром — 12000 грн':
+    'Вісім сесій психотерапії плюс консультація психіатра. Для складніших станів де потрібен медичний супровід і, можливо, медикаментозна підтримка.',
+  'Комплексний супровід — 15000 грн':
+    'Повний цикл: діагностика, психотерапія, психіатрія, нейрофідбек або VR за показаннями. Найглибший формат роботи з вимірюваним результатом.',
+};
+
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>({});
   const [direction, setDirection] = useState(1);
   const [pricingVariant] = useState<'A' | 'B'>(() => getVariant('pricing_model'));
+  const [expandedPricingOption, setExpandedPricingOption] = useState<string | null>(null);
+  const [selectedPricingOption, setSelectedPricingOption] = useState<string | null>(null);
   const isCompletedRef = useRef(false);
 
   const questions = useMemo(() => [
@@ -140,6 +153,17 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     };
   }, []);
 
+  const handlePricingOptionClick = (option: string) => {
+    setSelectedPricingOption(option);
+    setExpandedPricingOption((prev) => (prev === option ? null : option));
+  };
+
+  const handlePricingContinue = () => {
+    if (selectedPricingOption) {
+      handleSelect(selectedPricingOption);
+    }
+  };
+
   const handleSelect = (option: string) => {
     trackEvent(getQuestionEvent(currentStep), {
       question_id: question.id,
@@ -240,18 +264,49 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
               className="quiz__screen"
             >
               <h2 className="quiz__question">{question.title}</h2>
-              <div className="quiz__options">
-                {question.options.map((option) => (
-                  <button
-                    key={option}
-                    className={`quiz__option ${answers[question.id] === option ? 'quiz__option--selected' : ''}`}
-                    onClick={() => handleSelect(option)}
-                    type="button"
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
+              {question.id === 'pricing' && pricingVariant === 'B' ? (
+                <div className="quiz__options quiz__options--pricing">
+                  {question.options.map((option) => (
+                    <div key={option} className="quiz__pricing-item">
+                      <button
+                        type="button"
+                        className={`quiz__pricing-option${selectedPricingOption === option ? ' quiz__option--selected' : ''}`}
+                        onClick={() => handlePricingOptionClick(option)}
+                      >
+                        <span>{option}</span>
+                        <span className="quiz__pricing-chevron" aria-hidden="true">
+                          {expandedPricingOption === option ? '▲' : '▼'}
+                        </span>
+                      </button>
+                      <div className={`quiz__pricing-desc${expandedPricingOption === option ? ' quiz__pricing-desc--open' : ''}`}>
+                        <p>{packageDescriptions[option]}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {selectedPricingOption && (
+                    <button
+                      type="button"
+                      className="btn btn--primary quiz__pricing-continue"
+                      onClick={handlePricingContinue}
+                    >
+                      Продовжити
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="quiz__options">
+                  {question.options.map((option) => (
+                    <button
+                      key={option}
+                      className={`quiz__option ${answers[question.id] === option ? 'quiz__option--selected' : ''}`}
+                      onClick={() => handleSelect(option)}
+                      type="button"
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
 

@@ -712,6 +712,77 @@ img {
     }
   }
 
+  &__options--pricing {
+    gap: 0.5rem;
+  }
+
+  &__pricing-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__pricing-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.1rem 1.25rem;
+    background: $color-bg;
+    border: 2px solid transparent;
+    border-radius: $radius-md;
+    font-size: 1.05rem;
+    font-family: $font-body;
+    color: $color-text;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 52px;
+    gap: 0.75rem;
+
+    &:hover {
+      border-color: $color-primary-light;
+      background: rgba($color-primary-light, 0.06);
+    }
+
+    &.quiz__option--selected {
+      border-color: $color-primary;
+      background: rgba($color-primary, 0.07);
+      font-weight: 600;
+    }
+  }
+
+  &__pricing-chevron {
+    font-size: 0.65rem;
+    opacity: 0.45;
+    flex-shrink: 0;
+  }
+
+  &__pricing-desc {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+
+    &--open {
+      max-height: 160px;
+      opacity: 1;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: $color-text-muted;
+      line-height: 1.55;
+      padding: 0.6rem 1.25rem 0.75rem;
+      background: rgba($color-primary, 0.03);
+      border-radius: 0 0 $radius-md $radius-md;
+    }
+  }
+
+  &__pricing-continue {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
   &__controls {
     display: flex;
     gap: 0.75rem;
