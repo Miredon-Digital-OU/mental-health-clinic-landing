@@ -2,13 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowDown } from 'lucide-react';
 import { fadeInUp, staggerContainer } from '../styles/animations';
-import { getVariant } from '../utils/abTesting';
 
-import anxietyImg from '../assets/1_2026-03-17_15-28-27.png';
-import depressionImg from '../assets/2_2026-03-17_15-28-13.png';
-import burnoutImg from '../assets/3_2026-03-17_15-28-01.png';
-import ptsdImg from '../assets/5_1_2026-03-17_15-34-27.png';
-import relationshipsImg from '../assets/5_2026-03-17_15-27-36.png';
+import anxietyImg from '../assets/1_2026-03-17_15-28-27.webp';
+import depressionImg from '../assets/2_2026-03-17_15-28-13.webp';
+import burnoutImg from '../assets/3_2026-03-17_15-28-01.webp';
+import ptsdImg from '../assets/5_1_2026-03-17_15-34-27.webp';
+import relationshipsImg from '../assets/5_2026-03-17_15-27-36.webp';
 
 type HeroProps = {
   onStartQuiz: (placement: 'hero' | 'mid' | 'lower') => void;
@@ -199,7 +198,6 @@ const heroTopics: Record<TopicKey, TopicData> = {
 };
 
 const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
-  const [variant] = useState<'A' | 'B'>(() => getVariant('hero_title'));
   const [selectedTopicId, setSelectedTopicId] = useState<TopicKey>('anxiety');
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [descOpen, setDescOpen] = useState(false);
@@ -305,14 +303,11 @@ const Hero: React.FC<HeroProps> = ({ onStartQuiz }) => {
           </motion.p>
 
           <motion.h1 variants={fadeInUp} className="hero__title">
-            {variant === 'A'
-              ? 'Разом перетворюємо складний шлях до відновлення у зрозумілий план'
-              : 'Зрозуміти свій стан і отримати правильну допомогу. Знайдіть свою точку опори з нами'}
+            Зрозуміти свій стан і отримати правильну допомогу. Знайдіть свою точку опори з нами
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="hero__subtitle">
-            Пройдіть короткий тест і отримайте рекомендацію: психолог, психіатр або комплексний підхід
-            з додатковими методиками.
+            Пройдіть короткий тест і отримайте рекомендацію: психолог, психіатр або комплексний підхід з додатковими методиками.
           </motion.p>
 
           <motion.div variants={fadeInUp} className="hero__actions hero__actions--centered">

@@ -221,6 +221,33 @@ export default async (request: Request, context: any) => {
   try {
     const store = getStore("lead-submissions");
     await store.setJSON(`${timestamp}-${submissionId}.json`, submission);
+    
+    // Send Telegram Notification
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    
+    if (botToken && chatId) {
+      const text = `🚀 **Новий лід: ${name}**\n` +
+                   `📞 Контакт: ${contact || email || phone || "не вказано"}\n` +
+                   `🎯 Етап: ${funnelStage || "landing"}\n` +
+                   `📍 Джерело: ${submission.metadata.source}\n` +
+                   `🌡️ План: ${submission.metadata.attribution?.utmCampaign || "organic"}\n` +
+                   `🆔 ID: ${submissionId}`;
+      
+      try {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: "Markdown",
+          }),
+        });
+      } catch (tgError) {
+        console.error("Failed to send Telegram notification", tgError);
+      }
+    }
   } catch (error) {
     console.error("Failed to persist lead submission", error);
     return json(500, { error: "Failed to save submission" });

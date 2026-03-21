@@ -5,12 +5,13 @@ import CookieConsent from './components/CookieConsent'
 import { getConsentStatus } from './utils/consent'
 import ErrorBoundary from './components/ErrorBoundary'
 import PrivacyPolicy from './components/PrivacyPolicy'
+import AdminLeads from './components/AdminLeads'
 import { loadAnalyticsScripts } from './utils/analytics'
 import './styles/main.scss'
 
 export function Root() {
-  const [showPrivacy, setShowPrivacy] = useState(
-    () => typeof window !== 'undefined' && window.location.hash === '#privacy'
+  const [currentHash, setCurrentHash] = useState(
+    () => typeof window !== 'undefined' ? window.location.hash : ''
   );
 
   useEffect(() => {
@@ -20,12 +21,12 @@ export function Root() {
   }, []);
 
   useEffect(() => {
-    const handler = () => setShowPrivacy(window.location.hash === '#privacy');
+    const handler = () => setCurrentHash(window.location.hash);
     window.addEventListener('hashchange', handler);
     return () => window.removeEventListener('hashchange', handler);
   }, []);
 
-  if (showPrivacy) {
+  if (currentHash === '#privacy') {
     return (
       <>
         <div className="app">
@@ -37,6 +38,14 @@ export function Root() {
           }}
         />
       </>
+    );
+  }
+
+  if (currentHash === '#admin') {
+    return (
+      <div className="app">
+        <AdminLeads onBack={() => { window.location.hash = ''; }} />
+      </div>
     );
   }
 
