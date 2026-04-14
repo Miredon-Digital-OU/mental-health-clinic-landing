@@ -23,7 +23,12 @@ export default async (request: Request) => {
     const { blobs } = await store.list();
 
     if (blobs.length === 0) {
-      return json(200, { message: "No entries found.", count: 0 });
+      return json(200, {
+        message: "No entries found.",
+        count: 0,
+        leads: [],
+        lastUpdated: new Date().toISOString(),
+      });
     }
 
     const data: any[] = [];

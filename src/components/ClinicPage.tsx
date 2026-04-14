@@ -36,7 +36,11 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ onBackToStart }) => {
         <BottomCTA />
       </main>
       <Footer />
-      <StickyCTA />
+      <StickyCTA
+        onClick={() =>
+          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      />
     </div>
   );
 };

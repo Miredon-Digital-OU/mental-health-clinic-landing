@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Download, RefreshCw, ChevronLeft, Search } from 'lucide-react';
 
-const ADMIN_TOKEN = "opora-admin-secret-2026"; // Match netlify/functions/export.mts
+/** Must match `ADMIN_EXPORT_SECRET` in Netlify env (see netlify/functions/export.mts). */
+const ADMIN_TOKEN =
+  import.meta.env.VITE_ADMIN_EXPORT_SECRET ?? 'opora-admin-secret-2026';
+
+type ExportLeadRow = {
+  submissionId: string;
+  submittedAt: string;
+  name: string;
+  contact?: string;
+  email?: string;
+  phone?: string;
+  answerSet?: Record<string, string>;
+  metadata?: {
+    funnelStage?: string;
+    source?: string;
+  };
+};
 
 const AdminLeads: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  const [leads, setLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<ExportLeadRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
@@ -17,8 +33,8 @@ const AdminLeads: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
       const data = await resp.json();
       setLeads(data.leads || []);
-    } catch (e: any) {
-      setError(e.message || 'Failed to fetch leads');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to fetch leads');
     } finally {
       setLoading(false);
     }
